@@ -1,6 +1,7 @@
 "use client";
 import { toBase58 } from "util/base58";
 import { useState, Fragment } from "react";
+import useWebSocket from 'react-use-websocket';
 import { Cog6ToothIcon, ClipboardDocumentIcon, ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import { Title } from "@components/title";
 import { encrypt } from "pkg/encryption";
@@ -9,16 +10,42 @@ import { encodeCompositeKey } from "pkg/encoding";
 import { LATEST_KEY_VERSION } from "pkg/constants";
 
 export default function Home() {
-  const [text, setText] = useState("");
-  const [reads, setReads] = useState(999);
-
-  const [ttl, setTtl] = useState(7);
-  const [ttlMultiplier, setTtlMultiplier] = useState(60 * 60 * 24);
+  const [promptOne, setPromptOne] = useState("");
+  const [promptTwo, setPromptTwo] = useState("");
+  const [promptThree, setPromptThree] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
 
   const [link, setLink] = useState("");
+
+  const SOCKET_URL = 'wss://continuousgpt.fly.dev';
+
+  const {
+    sendMessage, 
+    sendJsonMessage,
+    readyState,
+    getWebSocket,
+  } = useWebSocket(SOCKET_URL, {
+    onOpen: () => console.log("opened"),
+    shouldReconnect: (closeEvent) => true,
+    reconnectAttempts: 10,
+    /*
+    attemptNumber will be 0 the first time it attempts to reconnect, so this equation results in a reconnect pattern of 1 second, 2 seconds, 4 seconds, 8 seconds, and then caps at 10 seconds until the maximum number of attempts is reached
+    */
+    reconnectInterval: (attemptNumber) =>
+      Math.min(Math.pow(2, attemptNumber) * 1000, 10000),
+    share: true,
+    onMessage: (messageEvent) => recvMessage(),
+  });
+
+  const recvMessage = () => {
+    // if start, prepare new string
+    // if streaming, append to new string
+    // if stop, end it. (?)
+  }
+
+
 
   const onSubmit = async () => {
     try {
@@ -52,6 +79,10 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  const isDisabled = () => {
+    return loading || promptOne.length <= 0 || promptTwo.length <= 0 || promptThree.length <= 0
+  }
 
   return (
     <div className="container px-8 mx-auto mt-16 lg:mt-32 ">
@@ -90,7 +121,7 @@ export default function Home() {
             onSubmit();
           }}
         >
-          <Title>Encrypt and Share</Title>
+          <Title>Generate and Share</Title>
 
           <pre className="px-4 py-3 mt-8 font-mono text-left bg-transparent border rounded border-zinc-600 focus:border-zinc-100/80 focus:ring-0 sm:text-sm text-zinc-100">
             <div className="flex items-start px-1 text-sm">
@@ -104,100 +135,59 @@ export default function Home() {
                   </Fragment>
                 ))}
               </div>
-
-              <textarea
-                id="text"
-                name="text"
-                value={text}
-                minLength={1}
-                onChange={(e) => setText(e.target.value)}
-                rows={Math.max(5, text.split("\n").length)}
-                placeholder="DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres"
-                className="w-full p-0 text-base bg-transparent border-0 appearance-none resize-none hover:resize text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
-              />
             </div>
           </pre>
-
           <div className="flex flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
-            <div className="w-full sm:w-1/5">
-              <label
-                className="flex items-center justify-center h-16 px-3 py-2 text-sm whitespace-no-wrap duration-150 border rounded hover:border-zinc-100/80 border-zinc-600 focus:border-zinc-100/80 focus:ring-0 text-zinc-100 hover:text-white hover:cursor-pointer "
-                htmlFor="file_input"
-              >
-                Upload a file
-              </label>
-              <input
-                className="hidden"
-                id="file_input"
-                type="file"
-                onChange={(e) => {
-                  const file = e.target.files![0];
-                  if (file.size > 1024 * 16) {
-                    setError("File size must be less than 16kb");
-                    return;
-                  }
-
-                  const reader = new FileReader();
-                  reader.onload = (e) => {
-                    const t = e.target!.result as string;
-                    setText(t);
-                  };
-                  reader.readAsText(file);
-                }}
-              />
-            </div>
-
             <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0 ">
               <label htmlFor="reads" className="block text-xs font-medium text-zinc-100">
-                READS
+                Prompt 1
               </label>
               <input
-                type="number"
-                name="reads"
-                id="reads"
+                type="text"
+                name="prompt_1"
+                id="prompt1"
                 className="w-full p-0 text-base bg-transparent border-0 appearance-none text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
-                value={reads}
-                onChange={(e) => setReads(e.target.valueAsNumber)}
+                value={promptOne}
+                onChange={(e) => setPromptOne(e.target.value)}
               />
             </div>
-            <div className="relative w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0 ">
+            <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0 ">
               <label htmlFor="reads" className="block text-xs font-medium text-zinc-100">
-                TTL
+                Prompt 2
               </label>
               <input
-                type="number"
-                name="reads"
-                id="reads"
+                type="text"
+                name="prompt_2"
+                id="prompt2"
                 className="w-full p-0 text-base bg-transparent border-0 appearance-none text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
-                value={ttl}
-                onChange={(e) => setTtl(e.target.valueAsNumber)}
+                value={promptTwo}
+                onChange={(e) => setPromptTwo(e.target.value)}
               />
-              <div className="absolute inset-y-0 right-0 flex items-center">
-                <label htmlFor="ttlMultiplier" className="sr-only" />
-                <select
-                  id="ttlMultiplier"
-                  name="ttlMultiplier"
-                  className="h-full py-0 pl-2 bg-transparent border-0 border-transparent rounded pr-7 text-zinc-500 focus:ring-0 sm:text-sm"
-                  onChange={(e) => setTtlMultiplier(parseInt(e.target.value))}
-                  defaultValue={60 * 60 * 24}
-                >
-                  <option value={60}>{ttl === 1 ? "Minute" : "Minutes"}</option>
-                  <option value={60 * 60}>{ttl === 1 ? "Hour" : "Hours"}</option>
-                  <option value={60 * 60 * 24}>{ttl === 1 ? "Day" : "Days"}</option>
-                </select>
-              </div>
+            </div>
+            <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0 ">
+              <label htmlFor="reads" className="block text-xs font-medium text-zinc-100">
+                Prompt 3
+              </label>
+              <input
+                type="text"
+                name="prompt_3"
+                id="prompt3"
+                className="w-full p-0 text-base bg-transparent border-0 appearance-none text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
+                value={promptThree}
+                onChange={(e) => setPromptThree(e.target.value)}
+              />
             </div>
           </div>
           <button
             type="submit"
-            disabled={loading || text.length <= 0}
+            disabled={isDisabled()}
             className={`mt-6 w-full h-12 inline-flex justify-center items-center  transition-all  rounded px-4 py-1.5 md:py-2 text-base font-semibold leading-7    bg-zinc-200 ring-1 ring-transparent duration-150   ${
-              text.length <= 0
+              isDisabled()
                 ? "text-zinc-400 cursor-not-allowed"
                 : "text-zinc-900 hover:text-zinc-100 hover:ring-zinc-600/80  hover:bg-zinc-900/20"
             } ${loading ? "animate-pulse" : ""}`}
           >
-            <span>{loading ? <Cog6ToothIcon className="w-5 h-5 animate-spin" /> : "Share"}</span>
+            <span>{loading ? <Cog6ToothIcon className="w-5 h-5 animate-spin" /> : "Generate"}</span>
           </button>
 
           <div className="mt-8">
