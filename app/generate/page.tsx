@@ -8,14 +8,6 @@ import { ErrorMessage } from "@components/error";
 
 export default function Home() {
   const [text, setText] = useState("");
-
-  const [context, setContext] = useState("");
-  const [messageOne, setMessageOne] = useState("");
-  const [messageTwo, setMessageTwo] = useState("");
-  const [messageThree, setMessageThree] = useState("");
-  const [resOne, setResOne] = useState("");
-  const [resTwo, setResTwo] = useState("");
-  const [resThree, setResThree] = useState("");
   const [serverRes, setServerRes] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -25,11 +17,7 @@ export default function Home() {
 
   const SOCKET_URL = 'wss://continuousgpt.fly.dev';
 
-  const PLACEHOLDERS = [
-    "Aziz's prompt",
-    "B prompt",
-    "C prompt"
-  ]
+  const PLACEHOLDER_PROMPT = "Example prompt"
 
   const {
     sendMessage, 
@@ -58,63 +46,33 @@ export default function Home() {
       case "streaming":
         const newRes = serverRes + data.text;
         setServerRes(newRes);
+      case "stop":
+        setLoading(false);
     }
     // if start, prepare new string
     // if streaming, append to new string
     // if stop, end it. (?)
   }
 
-  const handlePlaceholder = () => {
-    switch (context) {
-      case "first":
-        return PLACEHOLDERS[0];
-
-      case "second":
-        return PLACEHOLDERS[1];
-
-      case "third":
-        return PLACEHOLDERS[2];
-
-    }
-
-  }
   // TODO: Change prompt to match the structure of chatGPT
-  
-  const buildPrompt = () => {
-    return (
-      text + '\n'
-      + "their first prompt: \n" + messageOne + 'my response: \n' + resOne + '\n' 
-      + "their second prompt: \n" + messageTwo + 'my response: \n' + resTwo + '\n' 
-      + "their third prompt: \n" + messageThree + 'my response: \n' + resThree + '\n' 
-    );
-  }
 
   const onSubmit = async () => {
       setError("");
       setLink("");
+      setServerRes("");
       setLoading(true);
 
       const reqBody = {
         event: "text",
-        text: buildPrompt()
+        text: text
       }
       
       sendJsonMessage(reqBody);
   };
 
-  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    setContext(e.target.value);
-  
-  }
-
   const isDisabled = () => {
     return loading || [
-      messageOne.length,
-      messageTwo.length, 
-      messageThree.length,
-      resOne.length,
-      resTwo.length,
-      resThree.length
+      text.length
     ].indexOf(0) != -1
   }
 
@@ -156,29 +114,9 @@ export default function Home() {
           }}
         >
           <Title>Generate and Share</Title>
-          <div>
-            <label htmlFor="prompt" className="block mt-8 text-xs font-medium text-zinc-100">
-              Select prompt
-            </label>
-            <select onChange={handleSelect} className="h-10 px-3 py-2 mt-2 overflow-hidden text-zinc-100 duration-150 bg-transparent border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0">
-              <option value="first">Aziz Ansari</option>
-              <option value="second">Second</option>
-              <option value="third">Third</option>
-            </select>
-          </div>
           
-          <pre className="px-4 py-3 mt-4 font-mono text-left bg-transparent border rounded border-zinc-600 focus:border-zinc-100/80 focus:ring-0 sm:text-sm text-zinc-100">
+          <pre className="px-4 py-3 mt-8 font-mono text-left bg-transparent border rounded border-zinc-600 focus:border-zinc-100/80 focus:ring-0 sm:text-sm text-zinc-100">
             <div className="flex items-start px-1 text-sm">
-              <div aria-hidden="true" className="pr-4 font-mono border-r select-none border-zinc-300/5 text-zinc-700">
-                {Array.from({
-                  length: text.split("\n").length,
-                }).map((_, index) => (
-                  <Fragment key={index}>
-                    {(index + 1).toString().padStart(2, "0")}
-                    <br />
-                  </Fragment>
-                ))}
-              </div>
               <textarea
                 id="text"
                 name="text"
@@ -186,7 +124,7 @@ export default function Home() {
                 minLength={1}
                 onChange={(e) => setText(e.target.value)}
                 rows={Math.max(5, text.split("\n").length)}
-                placeholder={handlePlaceholder()}
+                placeholder={PLACEHOLDER_PROMPT}
                 className="w-full p-0 text-base bg-transparent border-0 appearance-none resize-none hover:resize text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
               />
             </div>
@@ -194,85 +132,11 @@ export default function Home() {
           <div className="flex flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
             <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0 ">
               <label htmlFor="reads" className="block text-xs font-medium text-zinc-100">
-                Their 1st prompt
+                Response
               </label>
-              <input
-                type="text"
-                name="prompt_1"
-                id="prompt1"
-                className="w-full p-0 text-base bg-transparent border-0 appearance-none text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
-                value={messageOne}
-                onChange={(e) => setMessageOne(e.target.value)}
-              />
-            </div>
-            <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0 ">
-              <label htmlFor="reads" className="block text-xs font-medium text-zinc-100">
-                Their 1st response
-              </label>
-              <input
-                type="text"
-                name="prompt_2"
-                id="prompt2"
-                className="w-full p-0 text-base bg-transparent border-0 appearance-none text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
-                value={resOne}
-                onChange={(e) => setResOne(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="flex flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
-            <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0 ">
-              <label htmlFor="reads" className="block text-xs font-medium text-zinc-100">
-                Their 2nd prompt
-              </label>
-              <input
-                type="text"
-                name="prompt_1"
-                id="prompt1"
-                className="w-full p-0 text-base bg-transparent border-0 appearance-none text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
-                value={messageTwo}
-                onChange={(e) => setMessageTwo(e.target.value)}
-              />
-            </div>
-            <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0 ">
-              <label htmlFor="reads" className="block text-xs font-medium text-zinc-100">
-                Their 2nd response
-              </label>
-              <input
-                type="text"
-                name="prompt_2"
-                id="prompt2"
-                className="w-full p-0 text-base bg-transparent border-0 appearance-none text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
-                value={resTwo}
-                onChange={(e) => setResTwo(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="flex flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
-            <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0 ">
-              <label htmlFor="reads" className="block text-xs font-medium text-zinc-100">
-                Their 3rd prompt
-              </label>
-              <input
-                type="text"
-                name="prompt_1"
-                id="prompt1"
-                className="w-full p-0 text-base bg-transparent border-0 appearance-none text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
-                value={messageThree}
-                onChange={(e) => setMessageThree(e.target.value)}
-              />
-            </div>
-            <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0 ">
-              <label htmlFor="reads" className="block text-xs font-medium text-zinc-100">
-                Their 3rd response
-              </label>
-              <input
-                type="text"
-                name="prompt_2"
-                id="prompt2"
-                className="w-full p-0 text-base bg-transparent border-0 appearance-none text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
-                value={resThree}
-                onChange={(e) => setResThree(e.target.value)}
-              />
+              {serverRes ? <div className="duration-150 border rounded sm:w-2/5 border-zinc-100/80 focus:ring-0 sm:text-sm">
+              {serverRes}
+              </div> : <></>}
             </div>
           </div>
           <button
@@ -286,10 +150,6 @@ export default function Home() {
           >
             <span>{loading ? <Cog6ToothIcon className="w-5 h-5 animate-spin" /> : "Generate"}</span>
           </button>
-
-          {serverRes ? <div className="duration-150 border rounded sm:w-2/5 border-zinc-100/80 focus:ring-0 sm:text-sm">
-            {serverRes}
-          </div> : <></>}
 
           <div className="mt-8">
             <ul className="space-y-2 text-xs text-zinc-500">
