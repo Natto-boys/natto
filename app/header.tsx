@@ -5,17 +5,8 @@ import { usePathname } from "next/navigation";
 
 const navigation = [
   {
-    name: "Share",
-    href: "/share",
-  },
-  {
-    name: "Unseal",
-    href: "/unseal",
-  },
-
-  {
-    name: "Deploy",
-    href: "/deploy",
+    name: "Generate",
+    href: "/generate",
   },
   {
     name: "GitHub",
@@ -31,7 +22,7 @@ export const Header: React.FC = () => {
       <div className="container mx-auto">
         <div className="flex flex-col items-center justify-between gap-2 pt-6 sm:h-20 sm:flex-row sm:pt-0">
           <Link href="/" className="text-2xl font-semibold duration-150 text-zinc-100 hover:text-white">
-            EnvShare
+            PickUp
           </Link>
           {/* Desktop navigation */}
           <nav className="flex items-center grow">

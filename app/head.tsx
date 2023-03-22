@@ -11,7 +11,7 @@ export default function Head({ title, subtitle }: { title: string; subtitle: str
 
   return (
     <>
-      <title>EnvShare</title>
+      <title>PickUp</title>
       <meta content="width=device-width, initial-scale=1" name="viewport" />
       <meta name="description" content={subtitle} />
       <meta name="theme-color" content="#000000" />
