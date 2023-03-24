@@ -7,6 +7,7 @@ import { Title } from "@components/title";
 import { ErrorMessage } from "@components/error";
 
 export default function Home() {
+  const [name, setName] = useState("");
   const [text, setText] = useState("");
   const [serverRes, setServerRes] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,7 +16,7 @@ export default function Home() {
 
   const [link, setLink] = useState("");
 
-  const SOCKET_URL = 'ws://localhost:8080/';
+  const SOCKET_URL = 'wss://8c1c-62-244-186-53.eu.ngrok.io/';
 
   const PLACEHOLDER_PROMPT = ""
 
@@ -57,6 +58,10 @@ export default function Home() {
     }
   }
 
+  const handleName = (name: string) => {
+    setName(name);
+  }
+
   // TODO: Change prompt to match the structure of chatGPT
 
   const onSubmit = async () => {
@@ -67,6 +72,7 @@ export default function Home() {
 
       const reqBody = {
         event: "text",
+        name: name,
         text: text
       }
       
@@ -75,7 +81,8 @@ export default function Home() {
 
   const isDisabled = () => {
     return loading || [
-      text.length
+      text.length,
+      name.length
     ].indexOf(0) != -1
   }
 
@@ -118,13 +125,13 @@ export default function Home() {
         >
           <Title>Generate and Share</Title>
           
-          <pre className="px-4 py-3 mt-8 font-mono text-left bg-transparent border rounded border-zinc-600 focus:border-zinc-100/80 focus:ring-0 sm:text-sm text-zinc-100">
-            <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0">
-              <label htmlFor="prompt" className="block text-xs font-medium text-zinc-100">
-                Name
-              </label>
-              <input type="text" className="duration-150 border rounded sm:w-2/5 border-zinc-100/80 focus:ring-0 sm:text-sm" />
-            </div>
+          <div className="w-full h-16 mt-8 px-3 py-2 bg-transparent duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0">
+            <label htmlFor="prompt" className="block text-xs font-medium text-zinc-100">
+              Name
+            </label>
+            <input type="text" onChange={(e) => handleName(e.target.value)} className="duration-150 bg-transparent border-none text-zinc-100 focus:ring-0 sm:text-sm" />
+          </div>
+          <pre className="px-4 py-3 mt-4 font-mono text-left bg-transparent border rounded border-zinc-600 focus:border-zinc-100/80 focus:ring-0 sm:text-sm text-zinc-100">
             <div className="flex items-start px-1 text-sm">
               <textarea
                 id="text"
