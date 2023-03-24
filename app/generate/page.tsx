@@ -15,7 +15,7 @@ export default function Home() {
 
   const [link, setLink] = useState("");
 
-  const SOCKET_URL = 'wss://6b78-217-138-75-212.eu.ngrok.io/';
+  const SOCKET_URL = 'ws://localhost:8080/';
 
   const PLACEHOLDER_PROMPT = ""
 
@@ -55,9 +55,6 @@ export default function Home() {
       case "stop":
         setLoading(false);
     }
-    // if start, prepare new string
-    // if streaming, append to new string
-    // if stop, end it. (?)
   }
 
   // TODO: Change prompt to match the structure of chatGPT
@@ -122,6 +119,12 @@ export default function Home() {
           <Title>Generate and Share</Title>
           
           <pre className="px-4 py-3 mt-8 font-mono text-left bg-transparent border rounded border-zinc-600 focus:border-zinc-100/80 focus:ring-0 sm:text-sm text-zinc-100">
+            <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0">
+              <label htmlFor="prompt" className="block text-xs font-medium text-zinc-100">
+                Name
+              </label>
+              <input type="text" className="duration-150 border rounded sm:w-2/5 border-zinc-100/80 focus:ring-0 sm:text-sm" />
+            </div>
             <div className="flex items-start px-1 text-sm">
               <textarea
                 id="text"
@@ -136,7 +139,7 @@ export default function Home() {
             </div>
           </pre>
           <div className="flex flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
-            <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0 ">
+            <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0">
               <label htmlFor="reads" className="block text-xs font-medium text-zinc-100">
                 Response
               </label>
