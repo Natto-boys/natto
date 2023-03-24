@@ -15,9 +15,9 @@ export default function Home() {
 
   const [link, setLink] = useState("");
 
-  const SOCKET_URL = 'wss://continuousgpt.fly.dev';
+  const SOCKET_URL = 'wss://6b78-217-138-75-212.eu.ngrok.io/';
 
-  const PLACEHOLDER_PROMPT = "Example prompt"
+  const PLACEHOLDER_PROMPT = ""
 
   const {
     sendMessage, 
@@ -40,7 +40,13 @@ export default function Home() {
 
   const recvMessage = (dataFromServer: MessageEvent<any>) => {
     let data = JSON.parse(dataFromServer.data)
-    switch (data.streaming) {
+    console.log(data);
+    if (data.error) {
+      setError(data.error);
+      return;
+    }
+
+    switch (data.stream) {
       case "start":
         setServerRes("");
       case "streaming":
