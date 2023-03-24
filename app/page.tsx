@@ -21,7 +21,7 @@ export default function Home() {
             Up your Hinge game
           </h1>
           <p className="mt-6 leading-5 text-zinc-600 sm:text-center">
-            Generate pick-up lines from your potential match's prompts.
+            Generate pick-up lines from their prompts.
           </p>
           <div className="flex flex-col justify-center gap-4 mx-auto mt-8 sm:flex-row sm:max-w-lg ">
             <Link
