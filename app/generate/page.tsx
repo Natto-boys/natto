@@ -16,7 +16,7 @@ export default function Home() {
 
   const [link, setLink] = useState("");
 
-  const SOCKET_URL = 'wss://8c1c-62-244-186-53.eu.ngrok.io/';
+  const SOCKET_URL = 'wss://natto-server.fly.dev/';
 
   const PLACEHOLDER_PROMPT = ""
 
