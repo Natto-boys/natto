@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <head />
-      <body className="relative min-h-screen bg-black bg-gradient-to-tr from-zinc-900/50 to-zinc-700/30">
+      <body className="relative min-h-screen bg-zinc-100">
         {
           // Not everyone will want to host envshare on Vercel, so it makes sense to make this opt-in.
           process.env.ENABLE_VERCEL_ANALYTICS ? <Analytics /> : null
@@ -22,7 +22,7 @@ export default function RootLayout({
 
         <Header />
 
-        <main className=" min-h-[80vh] ">{children}</main>
+        <main className=" min-h-[80vh] sm:w-full px-4">{children}</main>
 
         <footer className="bottom-0 border-t inset-2x-0 border-zinc-500/10">
           <div className="flex flex-col gap-1 px-6 py-12 mx-auto text-xs text-center text-zinc-700 max-w-7xl lg:px-8">

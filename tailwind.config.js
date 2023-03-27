@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
+      serif: ['Castoro', 'ui-serif']
     },
     extend: {
       dropShadow: {
@@ -14,5 +15,8 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [
+    require("@tailwindcss/forms"),
+    require("daisyui")
+  ],
 };
