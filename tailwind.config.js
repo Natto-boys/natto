@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
+      serif: ['Castoro', 'ui-serif']
     },
     extend: {
       dropShadow: {

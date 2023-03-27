@@ -7,8 +7,8 @@ import { Title } from "@components/title";
 import { ErrorMessage } from "@components/error";
 
 export default function Home() {
-  const [name, setName] = useState("");
-  const [text, setText] = useState("");
+  const [name, setName] = useState("Carolina");
+  const [text, setText] = useState("Do you agree or disagree that your mum should not take you on holiday to Napa 🙃");
   const [serverRes, setServerRes] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -16,8 +16,6 @@ export default function Home() {
   const [link, setLink] = useState("");
 
   const SOCKET_URL = 'wss://natto-server.fly.dev/';
-
-  const PLACEHOLDER_PROMPT = ""
 
   const {
     sendMessage, 
@@ -88,22 +86,18 @@ export default function Home() {
   return (
     <div>
         <form
-          className="max-w-3xl mx-auto"
+          className="max-w-sm mx-auto"
           onSubmit={(e) => {
             e.preventDefault();
             if (text.length <= 0) return;
             onSubmit();
           }}
         >
-          <Title>Generate and Share</Title>
           
-          <div className="w-full h-16 mt-8 px-3 py-2 bg-transparent duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0">
-            <label htmlFor="prompt" className="block text-xs font-medium text-zinc-100">
-              Name
-            </label>
-            <input type="text" onChange={(e) => handleName(e.target.value)} className="duration-150 bg-transparent border-none text-zinc-100 focus:ring-0 sm:text-sm" />
+          <div className="flex items-center w-full h-16 py-2 bg-transparent focus-within:border-zinc-100/80 focus-within:ring-0">
+            <input type="text" value={name} onChange={(e) => handleName(e.target.value)} className="duration-150 bg-transparent p-0 border-none text-zinc-900 focus:ring-0 text-2xl font-bold" />
           </div>
-            <div className="flex chat chat-start bg-black items-start px-1 text-sm">
+            <div className="flex chat chat-start items-start px-1 text-sm">
               <textarea
                 id="text"
                 name="text"
@@ -111,31 +105,33 @@ export default function Home() {
                 minLength={1}
                 onChange={(e) => setText(e.target.value)}
                 rows={Math.max(5, text.split("\n").length)}
-                placeholder={PLACEHOLDER_PROMPT}
-                className="w-full p-0 text-base bg-transparent border-0 appearance-none resize-none hover:resize text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
+                className="w-full chat-bubble bg-white font-serif bg-transparent border-0 appearance-none p-6 resize-none hover:resize text-zinc-900 placeholder-zinc-500 focus:ring-0 text-2xl"
               />
             </div>
-          <div className="flex flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
-            <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0">
-              <label htmlFor="reads" className="block text-xs font-medium text-zinc-100">
-                Response
-              </label>
-              {serverRes ? <div className="duration-150 border rounded text-zinc-100 border-zinc-100/80 focus:ring-0 sm:text-sm">
-              {serverRes}
-              </div> : <></>}
+            {serverRes ? 
+            <div className="flex chat chat-end flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
+                <div className=" chat-bubble duration-150 text-zinc-100 bg-violet-700 focus:ring-0 text-lg">
+                  {serverRes}
+                </div>
+            </div> : <></>}
+            <div className="chat chat-end">
+              {loading ? 
+              <div className="w-3/8 chat-bubble mt-6 w-3/8 inline-flex justify-center items-center bg-violet-700">
+                <div className="loader" />
+                </div> :
+                <button
+                  type="submit"
+                  disabled={isDisabled()}
+                  className={`mt-6 w-3/8 h-12 inline-flex justify-center items-center  transition-all  rounded-full px-4 py-1.5 md:py-2 text-base font-semibold leading-7    bg-zinc-200 ring-1 ring-transparent duration-150   ${
+                    isDisabled()
+                      ? "text-zinc-400 cursor-not-allowed"
+                      : "text-zinc-900 hover:text-zinc-100  hover:bg-zinc-900/40"
+                  }`}
+                >
+                  <span>Generate</span>
+                </button>
+              }
             </div>
-          </div>
-          <button
-            type="submit"
-            disabled={isDisabled()}
-            className={`mt-6 w-full h-12 inline-flex justify-center items-center  transition-all  rounded px-4 py-1.5 md:py-2 text-base font-semibold leading-7    bg-zinc-200 ring-1 ring-transparent duration-150   ${
-              isDisabled()
-                ? "text-zinc-400 cursor-not-allowed"
-                : "text-zinc-900 hover:text-zinc-100 hover:ring-zinc-600/80  hover:bg-zinc-900/20"
-            } ${loading ? "animate-pulse" : ""}`}
-          >
-            <span>{loading ? <Cog6ToothIcon className="w-5 h-5 animate-spin" /> : "Generate"}</span>
-          </button>
 
           <div className="mt-8">
             <ul className="space-y-2 text-xs text-zinc-500">
