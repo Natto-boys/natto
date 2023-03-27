@@ -15,7 +15,7 @@ export default function Home() {
 
   const [link, setLink] = useState("");
 
-  const SOCKET_URL = 'wss://8c1c-62-244-186-53.eu.ngrok.io/';
+  const SOCKET_URL = 'wss://natto-server.fly.dev/';
 
   const PLACEHOLDER_PROMPT = ""
 
@@ -103,8 +103,7 @@ export default function Home() {
             </label>
             <input type="text" onChange={(e) => handleName(e.target.value)} className="duration-150 bg-transparent border-none text-zinc-100 focus:ring-0 sm:text-sm" />
           </div>
-          <pre className="px-4 py-3 mt-4 font-mono text-left bg-transparent border rounded border-zinc-600 focus:border-zinc-100/80 focus:ring-0 sm:text-sm text-zinc-100">
-            <div className="flex items-start px-1 text-sm">
+            <div className="flex chat chat-start bg-black items-start px-1 text-sm">
               <textarea
                 id="text"
                 name="text"
@@ -116,7 +115,6 @@ export default function Home() {
                 className="w-full p-0 text-base bg-transparent border-0 appearance-none resize-none hover:resize text-zinc-100 placeholder-zinc-500 focus:ring-0 sm:text-sm"
               />
             </div>
-          </pre>
           <div className="flex flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
             <div className="w-full h-16 px-3 py-2 duration-150 border rounded sm:w-2/5 hover:border-zinc-100/80 border-zinc-600 focus-within:border-zinc-100/80 focus-within:ring-0">
               <label htmlFor="reads" className="block text-xs font-medium text-zinc-100">
