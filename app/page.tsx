@@ -1,7 +1,7 @@
 "use client";
-import { useState, Fragment, ChangeEvent } from "react";
+import { useState, useRef, ReactNode } from "react";
 import useWebSocket from 'react-use-websocket';
-import { Cog6ToothIcon, ClipboardDocumentIcon, ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
+import { PencilIcon } from "@heroicons/react/24/outline";
 import { Title } from "@components/title";
 
 import { ErrorMessage } from "@components/error";
@@ -13,7 +13,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const [link, setLink] = useState("");
+  const nameRef = useRef<HTMLInputElement>(null);
+  const promptRef = useRef<HTMLTextAreaElement>(null);
 
   const SOCKET_URL = 'wss://natto-server.fly.dev/';
 
@@ -63,7 +64,6 @@ export default function Home() {
 
   const onSubmit = async () => {
       setError("");
-      setLink("");
       setServerRes("");
       setLoading(true);
 
@@ -76,6 +76,18 @@ export default function Home() {
       sendJsonMessage(reqBody);
   };
 
+  const handleNameFocus = () => {
+    if (nameRef.current) {
+      nameRef.current.focus();
+    } 
+  }
+
+  const handlePromptFocus = () => {
+    if (promptRef.current) {
+      promptRef.current.focus();
+    } 
+  }
+
   const isDisabled = () => {
     return loading || [
       text.length,
@@ -85,6 +97,7 @@ export default function Home() {
 
   return (
     <div>
+      {error ? <ErrorMessage message={error} /> : <></>}
         <form
           className="max-w-sm mx-auto"
           onSubmit={(e) => {
@@ -94,12 +107,17 @@ export default function Home() {
           }}
         >
           
-          <div className="flex items-center w-full h-16 py-2 bg-transparent focus-within:border-zinc-100/80 focus-within:ring-0">
-            <input type="text" value={name} onChange={(e) => handleName(e.target.value)} className="duration-150 bg-transparent p-0 border-none text-zinc-900 focus:ring-0 text-2xl font-bold" />
+          <div className="flex items-center w-full h-16 py-2 bg-transparent justify-between focus-within:border-zinc-100/80 focus-within:ring-0">
+            
+            <input type="name" ref={nameRef} value={name} onChange={(e) => handleName(e.target.value)} className="duration-150 w-3/5 bg-transparent p-0 border-none text-zinc-900 focus:ring-0 text-2xl font-semibold" />
+            <button type="button" onClick={handleNameFocus} className="p-2 rounded-md hover:bg-zinc-900/10">
+              <PencilIcon className="w-5 h-5" />
+            </button>
           </div>
-            <div className="flex chat chat-start items-start px-1 text-sm">
+            <div className="flex chat chat-start justify-between items-center px-1 text-sm">
               <textarea
-                id="text"
+                id="prompt"
+                ref={promptRef}
                 name="text"
                 value={text}
                 minLength={1}
@@ -107,10 +125,13 @@ export default function Home() {
                 rows={Math.max(5, text.split("\n").length)}
                 className="w-full chat-bubble bg-white font-serif bg-transparent border-0 appearance-none p-6 resize-none hover:resize text-zinc-900 placeholder-zinc-500 focus:ring-0 text-2xl"
               />
+              <button type="button" onClick={handlePromptFocus} className="flex items-end p-2 rounded-md hover:bg-zinc-900/10">
+                <PencilIcon className="w-5 h-5" />
+              </button>
             </div>
             {serverRes ? 
             <div className="flex chat chat-end flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
-                <div className=" chat-bubble duration-150 text-zinc-100 bg-violet-700 focus:ring-0 text-lg">
+                <div className=" chat-bubble duration-150 text-zinc-100 bg-violet-700 font-light focus:ring-0 text-lg">
                   {serverRes}
                 </div>
             </div> : <></>}
@@ -122,7 +143,7 @@ export default function Home() {
                 <button
                   type="submit"
                   disabled={isDisabled()}
-                  className={`mt-6 w-3/8 h-12 inline-flex justify-center items-center  transition-all  rounded-full px-4 py-1.5 md:py-2 text-base font-semibold leading-7    bg-zinc-200 ring-1 ring-transparent duration-150   ${
+                  className={`mt-6 w-3/8 h-12 inline-flex justify-center items-center transition-all rounded-full px-4 py-1.5 md:py-2 text-base font-semibold leading-7 bg-zinc-200 ring-1 ring-transparent duration-150   ${
                     isDisabled()
                       ? "text-zinc-400 cursor-not-allowed"
                       : "text-zinc-900 hover:text-zinc-100  hover:bg-zinc-900/40"
@@ -137,20 +158,9 @@ export default function Home() {
             <ul className="space-y-2 text-xs text-zinc-500">
               <li>
                 <p>
-                  <span className="font-semibold text-zinc-400">Reads:</span> The number of reads determines how often
-                  the data can be shared, before it deletes itself. 0 means unlimited.
+                  <span className="font-semibold text-zinc-400">Your data:</span> We won't store anything beyond a session. 
                 </p>
               </li>
-              <li>
-                <p>
-                  <span className="font-semibold text-zinc-400">TTL:</span> You can add a TTL (time to live) to the
-                  data, to automatically delete it after a certain amount of time. 0 means no TTL.
-                </p>
-              </li>
-              <p>
-                Clicking Share will generate a new symmetrical key and encrypt your data before sending only the
-                encrypted data to the server.
-              </p>
             </ul>
           </div>
         </form>
