@@ -5,7 +5,7 @@ module.exports = {
   content: ["./app/**/*.{js,ts,jsx,tsx}", "./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
   theme: {
     fontFamily: {
-      sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
+      sans: ['Poppins', "var(--font-inter)", ...defaultTheme.fontFamily.sans],
       serif: ['Castoro', 'ui-serif']
     },
     extend: {
