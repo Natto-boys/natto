@@ -7,7 +7,7 @@ import { Title } from "@components/title";
 import { ErrorMessage } from "@components/error";
 
 export default function Home() {
-  const [name, setName] = useState("Carolina");
+  const [name, setName] = useState("Maria");
   const [text, setText] = useState("Do you agree or disagree that your mum should not take you on holiday to Napa 🙃");
   const [serverRes, setServerRes] = useState("");
   const [loading, setLoading] = useState(false);
