@@ -6,6 +6,8 @@ on:
   push:
     branches-ignore:
       - main
+    paths:
+      - frontend/**
 defaults:
   run:
     working-directory: ./frontend
