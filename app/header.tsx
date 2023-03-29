@@ -14,7 +14,7 @@ const navigation = [
 export const Header: React.FC = () => {
   const pathname = usePathname();
   return (
-    <header className="top-0 z-30 w-full px-4 sticky backdrop-blur border border-t border-zinc-500/20 bg-violet-50/50">
+    <header className="top-0 z-30 w-full px-4 sticky backdrop-blur border-b border-zinc-500/20 bg-violet-50/50">
       <div className="container mx-auto">
         <div className="flex items-center justify-between sm:h-14 flex-row sm:pt-0">
           <Link href="/" className="text-xl font-semibold duration-150 text-zinc-900 hover:text-zinc-800">
