@@ -158,7 +158,7 @@ export default function Home() {
             <ul className="space-y-2 text-xs text-zinc-500">
               <li>
                 <p>
-                  <span className="font-semibold text-zinc-400">Your data:</span> We won't store anything beyond a session. 
+                  <span className="font-semibold text-zinc-400">Your data:</span> We don't store anything you write. We do send your writing to Open AI. You can read their <a href="https://openai.com/policies/api-data-usage-policies">data policy here.</a>
                 </p>
               </li>
             </ul>
