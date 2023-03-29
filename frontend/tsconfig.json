@@ -17,7 +17,7 @@
     "downlevelIteration": true,
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["./app/components/*"]
+      "@components/*": ["frontend/app/components/*"]
     },
     "plugins": [
       {

@@ -3,7 +3,7 @@ import { Inter } from "@next/font/google";
 import Link from "next/link";
 import { Header } from "./header";
 
-import { Analytics } from "@components/analytics";
+import { Analytics } from "frontend/app/components/analytics";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export default function RootLayout({
