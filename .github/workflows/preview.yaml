@@ -7,7 +7,10 @@ on:
     branches-ignore:
       - main
     paths:
-      - frontend/**
+        - frontend/**
+defaults:
+  run:
+    working-directory: ./frontend
 jobs:
   Deploy-Preview:
     runs-on: ubuntu-latest
