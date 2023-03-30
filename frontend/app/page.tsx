@@ -1,8 +1,8 @@
 "use client";
-import { useState, useRef, ReactNode } from "react";
+import { useState, useRef, useCallback } from "react";
 import useWebSocket from 'react-use-websocket';
 import { PencilIcon } from "@heroicons/react/24/outline";
-import { Title } from "app/components/title";
+import _ from 'lodash';
 
 import { ErrorMessage } from "app/components/error";
 
@@ -10,9 +10,9 @@ export default function Home() {
   const [name, setName] = useState("Maria");
   const [text, setText] = useState("Do you agree or disagree that your mum should not take you on holiday to Napa 🙃");
   const [serverRes, setServerRes] = useState("");
+  const resRef = useRef("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
   const nameRef = useRef<HTMLInputElement>(null);
   const promptRef = useRef<HTMLTextAreaElement>(null);
 
@@ -39,7 +39,6 @@ export default function Home() {
 
   const recvMessage = (dataFromServer: MessageEvent<any>) => {
     let data = JSON.parse(dataFromServer.data)
-    console.log(data);
     if (data.error) {
       setError(data.error);
       return;
@@ -48,19 +47,28 @@ export default function Home() {
     switch (data.stream) {
       case "start":
         setServerRes("");
+        resRef.current = '';
+
       case "streaming":
-        const newRes = serverRes + data.text;
-        setServerRes(newRes);
+        const current = resRef.current;
+        resRef.current = current + data.text;
+        debounceServerRes(serverRes + resRef.current);
+
       case "stop":
         setLoading(false);
     }
   }
 
+  const updateServerRes = (text: string) => {
+    setServerRes(text);
+    resRef.current = "";
+  }
+
+  const debounceServerRes = useCallback(_.debounce(updateServerRes, 10), []);
+
   const handleName = (name: string) => {
     setName(name);
   }
-
-  // TODO: Change prompt to match the structure of chatGPT
 
   const onSubmit = async () => {
       setError("");
