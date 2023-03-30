@@ -6,9 +6,9 @@ on:
   push:
     branches-ignore:
       - main
+    paths:
+        - frontend/**
 defaults:
-  # uses:
-  #   working-directory: ./frontend
   run:
     working-directory: ./frontend
 jobs:
