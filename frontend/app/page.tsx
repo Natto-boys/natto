@@ -2,9 +2,9 @@
 import { useState, useRef, ReactNode } from "react";
 import useWebSocket from 'react-use-websocket';
 import { PencilIcon } from "@heroicons/react/24/outline";
-import { Title } from "frontend/app/components/title";
+import { Title } from "app/components/title";
 
-import { ErrorMessage } from "frontend/app/components/error";
+import { ErrorMessage } from "app/components/error";
 
 export default function Home() {
   const [name, setName] = useState("Maria");
