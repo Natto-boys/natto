@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - backend/**
+      - .github/workflows/fly.yml
 jobs:
   deploy:
     name: Deploy app
@@ -13,10 +14,12 @@ jobs:
       image: birudeghi/continuousgpt:beta
       ports:
         - 8080
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: cd backend/
       - run: flyctl secrets set OPENAI_KEY=${{ secrets.OPENAI_KEY }} -t ${{ secrets.FLY_API_TOKEN }}
       - run: flyctl deploy --remote-only -t ${{ secrets.FLY_API_TOKEN }}
         env:
