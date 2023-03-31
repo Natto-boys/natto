@@ -1,10 +1,25 @@
-# Reverbal Server
+# HingeGPT Backend
 
-Reverbal generates insights for your verbal conversation as it happens, helping you close that important sales call or discussing travel plans with your friend.
-
-This server utilises Whisper and ChatGPT APIs to transcribe your audio and generate insights respsctively. You can adjust how ChatGPT generates insights by sending a prompt prior to starting the audio stream from your client.
+Stream GPT responses for dating app prompts.
 
 # Run
+### fly.io
+This repo is configured to deploy on fly.io through a github action in `../.github/workflows/fly.yml`.
+
+
+### Debug locally
+
+To run locally, create an .env file with `OPENAI_KEY=<your-own-key-here>` and run:
+```
+pip install -r requirements.txt
+python app.py
+```
+To make available on web:
+```
+ngrok http 8080
+```
+
+### Run Docker locally
 
 Pull docker image:
 ```
@@ -21,53 +36,23 @@ docker-compose up -d
 
 # API Reference
 
-This server works on a simple WebSocket connection that accepts different types of events.
+This server works on a simple WebSocket connection that accepts different types of events `ws://localhost:8080/`.
 
 ## To Server
 
-WebSockets `ws://localhost:80/`
-
-### **********`prompt`********** event
-Sets a prompt to be sent together with your transcribed text.
+### **********`text`********** event
+Sends a Hinge profile name and prompt text, to respond to.
 
 ```json
 { 
- "event": "prompt",
- "prompt": "This is a message to customers in a call centre: "
-}
-```
-
-### **`media`** event
-Audio streams in chunks that will be aggregated before being transcribed upon **`stop`** or **`break`** event.
-
-```json
-{ 
- "event": "media",
- "sequenceNumber": "3", 
- "media": "no+JhoaJjpzSHxAKBgYJDhtEopGKh4aIjZm7JhILBwYIDRg1qZSLh4aIjJevLBUMBwYHDBUsr5eMiIaHi5SpNRgNCAYHCxImu5mNiIaHipGiRBsOCQYGChAf0pyOiYaGiY+e/x4PCQYGCQ4cUp+QioaGiY6bxCIRCgcGCA0ZO6aSi4eGiI2YtSkUCwcGCAwXL6yVjIeGh4yVrC8XDAgGBwsUKbWYjYiGh4uSpjsZDQgGBwoRIsSbjomGhoqQn1IcDgkGBgkPHv+ej4mGhomOnNIfEAoGBgkOG0SikYqHhoiNmbsmEgsHBggNGDWplIuHhoiMl68sFQwHBgcMFSyvl4yIhoeLlKk1GA0IBgcLEia7mY2IhoeKkaJEGw4JBgYKEB/SnI6JhoaJj57/Hg8JBgYJDhxSn5CKhoaJjpvEIhEKBwYIDRk7ppKLh4aIjZi1KRQLBwYIDBcvrJWMh4aHjJWsLxcMCAYHCxQptZiNiIaHi5KmOxkNCAYHChEixJuOiYaGipCfUhwOCQYGCQ8e/56PiYaGiY6c0h8QCgYGCQ4bRKKRioeGiI2ZuyYSCwcGCA0YNamUi4eGiIyXrywVDAcGBwwVLK+XjIiGh4uUqTUYDQgGBwsSJruZjYiGh4qRokQbDgkGBgoQH9KcjomGhomPnv8eDwkGBgkOHFKfkIqGhomOm8QiEQoHBggNGTumkouHhoiNmLUpFAsHBggMFy+slYyHhoeMlawvFwwIBgcLFCm1mI2IhoeLkqY7GQ0IBgcKESLEm46JhoaKkJ9SHA4JBgYJDx7/no+JhoaJjpzSHxAKBgYJDhtEopGKh4aIjZm7JhILBwYIDRg1qZSLh4aIjJevLBUMBwYHDBUsr5eMiIaHi5SpNRgNCAYHCxImu5mNiIaHipGiRBsOCQYGChAf0pyOiYaGiY+e/x4PCQYGCQ4cUp+QioaGiY6bxCIRCgcGCA0ZO6aSi4eGiI2YtSkUCwcGCAwXL6yVjIeGh4yVrC8XDAgGBwsUKbWYjYiGh4uSpjsZDQgGBwoRIsSbjomGhoqQn1IcDgkGBgkPHv+ej4mGhomOnNIfEAoGBgkOG0SikYqHhoiNmbsmEgsHBggNGDWplIuHhoiMl68sFQwHBgcMFSyvl4yIhoeLlKk1GA0IBgcLEia7mY2IhoeKkaJEGw4JBgYKEB/SnI6JhoaJj57/Hg8JBgYJDhxSn5CKhoaJjpvEIhEKBwYIDRk7ppKLh4aIjZi1KRQLBwYIDBcvrJWMh4aHjJWsLxcMCAYHCxQptZiNiIaHi5KmOxkNCAYHChEixJuOiYaGipCfUhwOCQYGCQ8e/56PiYaGiY6c0h8QCgYGCQ4bRKKRioeGiA==" 
-}
-```
-
-### **`break`** event
-Aggregates collected audio streams to be transcribed. Does not close the connection.
-
-```json
-{
-  "event": "break"
-}
-```
-
-### **`stop`** event
-Aggregates collected audio streams to be transcribed and then closes the connection.
-```json
-{
-  "event": "stop"
+ "event": "text",
+ "name": "Jhamat",
+ "text": "What I order for the table Wood varnish",
 }
 ```
 
 ## From Server
 
-WebSockets `ws://localhost:80/`
 ### Stream response
 ```json
 {
@@ -90,11 +75,4 @@ WebSockets `ws://localhost:80/`
 {
   "error": "There's a problem..."
 }
-```
-
-# Debug
-
-To debug, create an .env file in root for your OpenAI token and run:
-```
-python app.py
 ```

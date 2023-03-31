@@ -6,3 +6,4 @@ include
 lib
 whisper.wav
 .vscode
+.ipynb

@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 NAME = "<NAME>"
 
@@ -34,18 +34,19 @@ EXAMPLE_CONVOS = [
     ),
 ]
 
+def create_input_str(name: str, input_str: str) -> str:
+    return f"Message from {name}: {input_str}"
 
 def get_chat_messages(
-    name: str,
-    input: str,
-    system_prompt: str = SYSTEM_PROMPT,
-    example_convos=EXAMPLE_CONVOS,
+    input_str: str,
+    system_prompt: str | None = SYSTEM_PROMPT,
+    example_convos: List[Tuple[str, str]] | None = EXAMPLE_CONVOS,
 ) -> List[Dict[str, str]]:
     messages = []
-    messages.append({"role": "system", "content": system_prompt})
+    if system_prompt:
+        messages.append({"role": "system", "content": system_prompt})
     for tup in example_convos:
         messages.append({"role": "user", "content": tup[0]})
         messages.append({"role": "assistant", "content": tup[1]})
-    new_message = f"Message from {name}: {input}"
-    messages.append({"role": "user", "content": new_message})
+    messages.append({"role": "user", "content": input_str})
     return messages

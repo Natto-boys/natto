@@ -5,7 +5,7 @@ import aiohttp
 import backoff
 from decouple import config
 
-from prompt import get_chat_messages
+from prompt import get_chat_messages, create_input_str
 
 OPENAI_MODEL: str = "gpt-3.5-turbo"
 MAX_TOKENS: int = 100
@@ -36,7 +36,8 @@ class SimpleChatBridge:
             raise Exception("OpenAI api key unknown.")
 
     def generate_messages(self, name: str, input: str) -> None:
-        messages = get_chat_messages(name, input)
+        input_str = create_input_str(name, input)
+        messages = get_chat_messages(input_str)
         self._messages = messages
 
     @property
