@@ -20,12 +20,12 @@ export default function RootLayout({
           process.env.ENABLE_VERCEL_ANALYTICS ? <Analytics /> : null
         }
 
-        <div className="text-3xl font-bold text-center text-gray-800 max-w-1xl mx-auto pt-16 pb-3 px-6">
+        <div className="text-3xl font-bold text-center text-gray-800 max-w-7xl mx-auto pt-16 pb-3 px-6">
           <p>
             Generate mediocre Hinge opening lines.
           </p>
         </div>
-        <div className="text-lg text-center text-gray-500 max-w-1xl mx-auto pb-16 px-6">
+        <div className="text-lg text-center text-gray-500 max-w-7xl mx-auto pb-16 px-6">
           <p>
             Fill in a name and prompt below.  Press generate, and repeat.
           </p>
