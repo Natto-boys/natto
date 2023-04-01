@@ -1,15 +1,18 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import useWebSocket from 'react-use-websocket';
-import { PencilIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import _ from 'lodash';
 
 import { ErrorMessage } from "app/components/error";
+import { ToastType, ToastMessage } from "app/components/toast";
 
 export default function Home() {
   const [name, setName] = useState("Maria");
   const [text, setText] = useState("Do you agree or disagree that your mum should not take you on holiday to Napa 🙃");
+  const [toastContent, setToastContent] = useState<Object[]>([]);
   const [serverRes, setServerRes] = useState("");
+  const [isCopy, setIsCopy]  = useState(false);
   const resRef = useRef("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -17,6 +20,7 @@ export default function Home() {
   const promptRef = useRef<HTMLTextAreaElement>(null);
 
   const SOCKET_URL = 'wss://natto-server.fly.dev/';
+  const COPY_CLIPBOARD = "Copied to clipboard.";
 
   const {
     sendMessage, 
@@ -59,6 +63,10 @@ export default function Home() {
     }
   }
 
+  const newToastContent = (newContent: Object) => {
+    setToastContent([...toastContent, newContent]);
+  }
+
   const updateServerRes = (text: string) => {
     setServerRes(text);
     resRef.current = "";
@@ -87,12 +95,26 @@ export default function Home() {
   const handleNameFocus = () => {
     if (nameRef.current) {
       nameRef.current.focus();
+      nameRef.current.setSelectionRange(
+        nameRef.current.value.length,
+        nameRef.current.value.length
+      );
     } 
+  }
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(serverRes);
+    setIsCopy(true);
+    _.delay(setIsCopy, 2000, false);
   }
 
   const handlePromptFocus = () => {
     if (promptRef.current) {
       promptRef.current.focus();
+      promptRef.current.setSelectionRange(
+        promptRef.current.value.length,
+        promptRef.current.value.length
+      );
     } 
   }
 
@@ -105,7 +127,8 @@ export default function Home() {
 
   return (
     <div>
-      {error ? <ErrorMessage message={error} /> : <></>}
+      {error ? <ToastMessage message={error} type={ToastType.ERROR} onClose={() => setError("")}/> : <></>}
+      {isCopy ? <ToastMessage message={COPY_CLIPBOARD} onClose={() => setIsCopy(false)}/> : <></>}
         <form
           className="max-w-sm mx-auto"
           onSubmit={(e) => {
@@ -139,9 +162,13 @@ export default function Home() {
             </div>
             {serverRes ? 
             <div className="flex chat chat-end flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
-                <div className=" chat-bubble duration-150 text-zinc-100 bg-violet-700 font-light focus:ring-0 text-lg">
+                <div className="flex flex-row items-center chat-bubble duration-150 text-zinc-100 bg-violet-700 font-light focus:ring-0 text-lg">
                   {serverRes}
+                  <button type="button" onClick={handleCopy} className="flex items-end p-2 rounded-md hover:bg-zinc-900/10">
+                    <DocumentDuplicateIcon className="w-5 h-5" />
+                  </button>
                 </div>
+                
             </div> : <></>}
             <div className="chat chat-end">
               {loading ? 
