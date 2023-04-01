@@ -1,7 +1,7 @@
 export default function Head({ title, subtitle }: { title: string; subtitle: string }) {
   // Fallback tagline
   title ??= "HingeGPT";
-  subtitle ??= "Generate mediocre Hinge pickup lines. Repeatedly.";
+  subtitle ??= "Repeatedly generate mediocre Hinge pickup lines.";
 
   const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
 
