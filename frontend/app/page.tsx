@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import useWebSocket from 'react-use-websocket';
-import { PencilIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import _ from 'lodash';
 
 import { ErrorMessage } from "app/components/error";
@@ -139,9 +139,13 @@ export default function Home() {
             </div>
             {serverRes ? 
             <div className="flex chat chat-end flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
-                <div className=" chat-bubble duration-150 text-zinc-100 bg-violet-700 font-light focus:ring-0 text-lg">
+                <div className="flex flex-row items-center chat-bubble duration-150 text-zinc-100 bg-violet-700 font-light focus:ring-0 text-lg">
                   {serverRes}
+                  <button type="button" onClick={() => {navigator.clipboard.writeText(serverRes)}} className="flex items-end p-2 rounded-md hover:bg-zinc-900/10">
+                    <DocumentDuplicateIcon className="w-5 h-5" />
+                  </button>
                 </div>
+                
             </div> : <></>}
             <div className="chat chat-end">
               {loading ? 
