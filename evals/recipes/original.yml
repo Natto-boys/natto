@@ -1,0 +1,8 @@
+model: "gpt-3.5-turbo"
+max_tokens: 100
+temperature: 1.0
+system_prompt: ""
+example_convos:
+  - {"role": "user", "content":""}
+user_prompt: ""
+# How to handle prompts where we append to user prompt, vs add new user dict in list
