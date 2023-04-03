@@ -1,11 +1,7 @@
 import "./globals.css";
 import { Inter } from "@next/font/google";
 import Link from "next/link";
-<<<<<<< Updated upstream
-=======
 import Script from "next/script";
-import { Header } from "./header";
->>>>>>> Stashed changes
 
 import { Analytics } from "app/components/analytics";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
