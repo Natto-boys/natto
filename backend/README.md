@@ -51,9 +51,7 @@ Sends a Hinge profile name and prompt text, to respond to.
 }
 ```
 
-## From Server
-
-### Stream response
+**Stream response**
 ```json
 {
   "text": "",
@@ -70,6 +68,23 @@ Sends a Hinge profile name and prompt text, to respond to.
   "stream": "stop"
 }
 ```
+
+### **********`image`********** event
+```json
+{ 
+ "event": "text",
+ "content": "/9j/4AAQSkZJRgABAQAAAQABAAD/...", # base64 encoded string of image
+}
+```
+
+**Response**
+Note: returns `""` if it cannot find any hinge prompt type text in an image.
+```json
+{
+  "text": "What I order for the table Wood varnish",
+}
+```
+
 ### Error response
 ```json
 {
