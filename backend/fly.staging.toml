@@ -1,6 +1,6 @@
-# fly.toml file generated for natto-server on 2023-03-24T14:41:30Z
+# fly.toml file generated for natto-backend-staging on 2023-04-04T16:21:01+01:00
 
-app = "natto-server"
+app = "natto-backend-staging"
 kill_signal = "SIGINT"
 kill_timeout = 5
 primary_region = "lhr"
