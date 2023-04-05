@@ -62,7 +62,7 @@ async def respond(ws: WebSocketServerProtocol):
 
 
 async def main(port: int = HTTP_SERVER_PORT) -> None:
-    async with websockets.serve(respond, None, port):
+    async with websockets.serve(respond, None, port, max_size=2*(2 ** 20)): # 2 MB max size
         print(f"server listening on: http://localhost:{port}")
         await asyncio.Future()
 
