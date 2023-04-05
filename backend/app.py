@@ -16,11 +16,11 @@ async def respond(ws: WebSocketServerProtocol):
         await ws.send(res)
 
     async def on_chat_response(data: str, streaming_status: str) -> None:
-        resObject = {"text": data, "stream": streaming_status}
+        resObject = {"event": "text", "text": data, "stream": streaming_status}
         await on_response(resObject)
 
     async def on_image_response(data: str) -> None:
-        resObject = {"text": data}
+        resObject = {"event": "image", "text": data}
         await on_response(resObject)
 
     async def on_error_response(text: str) -> None:
