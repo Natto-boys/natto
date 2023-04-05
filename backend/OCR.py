@@ -15,7 +15,6 @@ class OCR:
     def __init__(self) -> None:
         cred_bytes = base64.b64decode(config("GCP_CRED_JSON_BASE64"))
         cred_json = json.loads(cred_bytes.decode("utf-8"))
-        # cred_json.pop("type") # not accepted by Credentials
         self._creds = Credentials.from_authorized_user_info(cred_json)
         self.client = vision.ImageAnnotatorClient(credentials=self._creds)
 
@@ -51,5 +50,12 @@ class OCR:
     def get_prompt_text(self, content: bytes) -> str:
         image = vision.Image(content=content)
         response = self.client.text_detection(image=image)
-        full_text = response.text_annotations[0].description
-        return OCR.extract_prompt_from_ocr_text(full_text)
+        if response.text_annotations:
+            full_text = response.text_annotations[0].description
+            extract_text = OCR.extract_prompt_from_ocr_text(full_text)
+            if not extract_text:
+                print("No text from heuristic")
+            return extract_text
+        else:
+            print("No text from GCP")
+            return ""
