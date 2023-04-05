@@ -33,7 +33,7 @@ export const ToastMessage: React.FC<ToastProps> = ({ message, type, onClose }) =
     }
 
     return (
-        <div className="toast toast-start transition ease-in-out">
+        <div className="toast toast-start transition ease-in-out z-50">
             <div className={`alert ${setAlert()} flex flex-row`}>
                 <div>
                     <span>{message}</span>

@@ -1,11 +1,11 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import useWebSocket from 'react-use-websocket';
-import { PencilIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, DocumentDuplicateIcon, PhotoIcon } from "@heroicons/react/24/outline";
 import _ from 'lodash';
 
-import { ErrorMessage } from "app/components/error";
 import { ToastType, ToastMessage } from "app/components/toast";
+import { ImageUpload } from "./components/ImageUpload";
 
 export default function Home() {
   const [name, setName] = useState("Maria");
@@ -13,12 +13,14 @@ export default function Home() {
   const [toastContent, setToastContent] = useState<Object[]>([]);
   const [serverRes, setServerRes] = useState("");
   const [isCopy, setIsCopy]  = useState(false);
-  const resRef = useRef("");
   const [loading, setLoading] = useState(false);
+  const [isUpload, setIsUpload] = useState(false);
   const [error, setError] = useState("");
+
+  const resRef = useRef("");
   const nameRef = useRef<HTMLInputElement>(null);
   const promptRef = useRef<HTMLTextAreaElement>(null);
-
+  
   const SOCKET_URL = 'wss://natto-server.fly.dev/';
   const COPY_CLIPBOARD = "Copied to clipboard.";
 
@@ -92,6 +94,20 @@ export default function Home() {
       sendJsonMessage(reqBody);
   };
 
+  const handleUpload = (bytestr: string) => {
+      const reqBody = {
+        event: "image",
+        content: bytestr
+      }
+
+      sendJsonMessage(reqBody);
+      setIsUpload(false);
+  }
+
+  const handleCloseUpload = () => {
+    setIsUpload(false);
+  }
+
   const handleNameFocus = () => {
     if (nameRef.current) {
       nameRef.current.focus();
@@ -118,6 +134,10 @@ export default function Home() {
     } 
   }
 
+  const handleImageFocus = () => {
+    setIsUpload(true);
+  }
+
   const isDisabled = () => {
     return loading || [
       text.length,
@@ -127,8 +147,9 @@ export default function Home() {
 
   return (
     <div>
-      {error ? <ToastMessage message={error} type={ToastType.ERROR} onClose={() => setError("")}/> : <></>}
-      {isCopy ? <ToastMessage message={COPY_CLIPBOARD} onClose={() => setIsCopy(false)}/> : <></>}
+      {error ? <ToastMessage message={error} type={ToastType.ERROR} onClose={() => setError("")} /> : <></>}
+      {isCopy ? <ToastMessage message={COPY_CLIPBOARD} onClose={() => setIsCopy(false)} /> : <></>}
+      <ImageUpload onUpload={handleUpload} onError={(err) => setError(err)} isOpen={isUpload} onClose={handleCloseUpload} />
         <form
           className="max-w-sm mx-auto"
           onSubmit={(e) => {
@@ -141,7 +162,7 @@ export default function Home() {
           <div className="flex items-center w-full h-16 py-2 bg-transparent justify-between focus-within:border-zinc-100/80 focus-within:ring-0">
             
             <input type="name" ref={nameRef} value={name} onChange={(e) => handleName(e.target.value)} className="duration-150 w-3/5 bg-transparent p-0 border-none text-zinc-900 focus:ring-0 text-2xl font-semibold" />
-            <button type="button" onClick={handleNameFocus} className="p-2 rounded-md hover:bg-zinc-900/10">
+            <button type="button" onClick={handleNameFocus} className="flex items-center p-2 rounded-md hover:bg-zinc-900/10">
               <PencilIcon className="w-5 h-5" />
             </button>
           </div>
@@ -156,9 +177,15 @@ export default function Home() {
                 rows={Math.max(5, text.split("\n").length)}
                 className="w-full chat-bubble bg-white font-serif bg-transparent border-0 appearance-none p-6 resize-none hover:resize text-zinc-900 placeholder-zinc-500 focus:ring-0 text-2xl"
               />
-              <button type="button" onClick={handlePromptFocus} className="flex items-end p-2 rounded-md hover:bg-zinc-900/10">
-                <PencilIcon className="w-5 h-5" />
-              </button>
+              <div className="flex flex-col gap-4">
+                <button type="button" onClick={handlePromptFocus} className="flex items-end p-2 rounded-md hover:bg-zinc-900/10">
+                  <PencilIcon className="w-5 h-5" />
+                </button>
+                <button type="button" onClick={handleImageFocus} className="flex items-end p-2 rounded-md hover:bg-zinc-900/10">
+                  <PhotoIcon className="w-5 h-5" />
+                </button>
+              </div>
+              
             </div>
             {serverRes ? 
             <div className="flex chat chat-end flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
