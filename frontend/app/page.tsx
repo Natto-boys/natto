@@ -50,6 +50,17 @@ export default function Home() {
       return;
     }
 
+    switch (data.event) {
+      case "text":  
+        handleChatText(data);
+        break;
+      case "image":
+        setText(data.text);
+        break;
+    }
+  }
+
+  const handleChatText = (data: any) => {
     switch (data.stream) {
       case "start":
         setServerRes("");
