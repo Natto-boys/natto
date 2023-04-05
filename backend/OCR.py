@@ -19,23 +19,23 @@ class OCR:
         self.client = vision.ImageAnnotatorClient(credentials=self._creds)
 
     @staticmethod
-    def extract_prompt_from_ocr_text(
-        ocr_text: str, hinge_prompts: List[str] = ALL_PROMPTS
+    def extract_prompt_from_full_text(
+        full_text_annotation, hinge_prompts: List[str] = ALL_PROMPTS
     ) -> str:
-        """Heuristic to extract prompt and response from OCR text of Hinge profile"""
-        text_list = ocr_text.split("\n")
-        start_index, n = -1, len(text_list)
-        for i in range(n):
-            if text_list[i] in hinge_prompts:
-                start_index = i
-            # return concatendated string if reach a line that is len <=1
-            if start_index > -1 and len(text_list[i]) <= 1:
-                return " ".join(text_list[start_index:i])
-        # return all text to end of string if no line is len <=1
-        if start_index > -1:
-            return " ".join(text_list[start_index:])
-        else:
-            return ""
+        """Heuristic to extract prompt and response from OCR of Hinge profile"""
+        for page in full_text_annotation.pages:
+            for block in page.blocks:
+                block_text = ""
+                for paragraph in block.paragraphs:
+                    for word in paragraph.words:
+                        for symbol in word.symbols:
+                            block_text += symbol.text
+                            if symbol.property.detected_break.type:
+                                block_text += " "
+                for prompt in hinge_prompts:
+                    if prompt in block_text:
+                        return block_text
+        return ""
 
     @staticmethod
     def read_from_path(path: Path) -> bytes:
@@ -50,9 +50,10 @@ class OCR:
     def get_prompt_text(self, content: bytes) -> str:
         image = vision.Image(content=content)
         response = self.client.text_detection(image=image)
-        if response.text_annotations:
-            full_text = response.text_annotations[0].description
-            extract_text = OCR.extract_prompt_from_ocr_text(full_text)
+        if response.full_text_annotation:
+            extract_text = OCR.extract_prompt_from_full_text(
+                response.full_text_annotation
+            )
             if not extract_text:
                 print("No text from heuristic")
             return extract_text
