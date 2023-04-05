@@ -57,7 +57,7 @@ async def respond(ws: WebSocketServerProtocol):
                     await on_error_response("Missing 'content' field")
                     continue
                 content = ocr.base64_to_bytes(data["content"])
-                text = ocr.get_prompt_text(content)
+                text = ocr.get_text_from_image(content)
                 await on_image_response(text)
         except PayloadTooBig as e:
             await on_error_response(
