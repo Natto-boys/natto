@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, ChangeEvent } from "react";
 import cn from "classnames";
 import { useOnClickOutside } from "usehooks-ts";
 
@@ -25,7 +25,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onUpload, onError, isO
         onUpload(file);
     }
 
-    const handleChange = (file: FileList | null) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files
         if (file) {
             const reader = new FileReader();
             reader.readAsDataURL(file[0]);
@@ -46,7 +47,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onUpload, onError, isO
             <div className="modal-box" ref={ref}>
                 <h3 className="font-bold text-lg">Screenshot upload</h3>
                 <p className="py-4">We&apos;ll extract prompts from your screenshot, and will not keep your image beyond your current session.</p>
-                <input type="file" accept="image/png" value={file} className="file-input file-input-bordered w-full max-w-xs" onChange={(e) => handleChange(e.target.files)} />
+                <input type="file" accept="image/png, image/jpeg" className="file-input file-input-bordered w-full max-w-xs" onChange={(e) => handleChange(e)} />
                 <div className="modal-action">
                     <button className="btn" onClick={handleUpload}>Upload</button>
                 </div>

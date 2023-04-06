@@ -1,11 +1,10 @@
 "use client";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, ChangeEvent } from "react";
 import useWebSocket from 'react-use-websocket';
 import { PencilIcon, DocumentDuplicateIcon, PhotoIcon } from "@heroicons/react/24/outline";
 import _ from 'lodash';
 
 import { ToastType, ToastMessage } from "app/components/toast";
-import { ImageUpload } from "./components/ImageUpload";
 
 export default function Home() {
   const [name, setName] = useState("Maria");
@@ -18,10 +17,11 @@ export default function Home() {
   const [error, setError] = useState("");
 
   const resRef = useRef("");
+  const fileRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const promptRef = useRef<HTMLTextAreaElement>(null);
   
-  const SOCKET_URL = 'wss://natto-server.fly.dev/';
+  const SOCKET_URL = 'wss://natto-backend-staging.fly.dev/';
   const COPY_CLIPBOARD = "Copied to clipboard.";
 
   const {
@@ -30,7 +30,10 @@ export default function Home() {
     readyState,
     getWebSocket,
   } = useWebSocket(SOCKET_URL, {
-    onOpen: () => console.log("opened"),
+    onOpen: () => {
+      console.log("opened");
+      setIsUpload(false)
+    },
     shouldReconnect: (closeEvent) => true,
     reconnectAttempts: 10,
     /*
@@ -55,7 +58,9 @@ export default function Home() {
         handleChatText(data);
         break;
       case "image":
+        console.log("Receiving OCR text...")
         setText(data.text);
+        setIsUpload(false);
         break;
     }
   }
@@ -105,18 +110,35 @@ export default function Home() {
       sendJsonMessage(reqBody);
   };
 
-  const handleUpload = (bytestr: string) => {
-      const reqBody = {
-        event: "image",
-        content: bytestr
-      }
-
-      sendJsonMessage(reqBody);
-      setIsUpload(false);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null
+    if (file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            console.log('file: ', reader.result);
+            if (typeof reader.result === 'string') {
+                handleUpload(reader.result);
+                setIsUpload(true);
+            }
+        }
+        reader.onerror = (err) => {
+            setError("There's something wrong with the file upload. Please try again.");
+        }
+    }
   }
 
-  const handleCloseUpload = () => {
-    setIsUpload(false);
+  const handleUpload = (bytestr: string) => {
+      const regex = /^data:image\/png;base64,/;
+      const result = bytestr.replace(regex, '');
+
+      const reqBody = {
+        event: "image",
+        content: result
+      }
+      console.log("sending image...");
+      sendJsonMessage(reqBody);
+      
   }
 
   const handleNameFocus = () => {
@@ -146,8 +168,13 @@ export default function Home() {
   }
 
   const handleImageFocus = () => {
-    setIsUpload(true);
+    if (fileRef.current) {
+      fileRef.current.click();
+    }
+    
   }
+
+  const loadingClassname = isUpload ? "loading" : "";
 
   const isDisabled = () => {
     return loading || [
@@ -160,7 +187,7 @@ export default function Home() {
     <div>
       {error ? <ToastMessage message={error} type={ToastType.ERROR} onClose={() => setError("")} /> : <></>}
       {isCopy ? <ToastMessage message={COPY_CLIPBOARD} onClose={() => setIsCopy(false)} /> : <></>}
-      <ImageUpload onUpload={handleUpload} onError={(err) => setError(err)} isOpen={isUpload} onClose={handleCloseUpload} />
+      {/* <ImageUpload onUpload={handleUpload} onError={(err) => setError(err)} isOpen={isUpload} onClose={handleCloseUpload} /> */}
         <form
           className="max-w-sm mx-auto"
           onSubmit={(e) => {
@@ -172,11 +199,14 @@ export default function Home() {
           
           <div className="flex items-center w-full h-16 py-2 bg-transparent justify-between focus-within:border-zinc-100/80 focus-within:ring-0">
             
-            <input type="name" ref={nameRef} value={name} onChange={(e) => handleName(e.target.value)} className="duration-150 w-3/5 bg-transparent p-0 border-none text-zinc-900 focus:ring-0 text-2xl font-semibold" />
+            <input type="name" ref={nameRef} value={name} onChange={(e) => handleName(e.target.value)} className="duration-150 w-3/5 pl-2 bg-transparent border-none text-zinc-900 focus:ring-0 text-2xl font-semibold" />
             <button type="button" onClick={handleNameFocus} className="flex items-center p-2 rounded-md hover:bg-zinc-900/10">
               <PencilIcon className="w-5 h-5" />
             </button>
           </div>
+            <button type="button" onClick={handleImageFocus} className={`mb-2 btn rounded-full border-none bg-violet-500 text-white hover:bg-zinc-900/10 ${loadingClassname}`}>
+              {isUpload ? "" : "Use screenshot"}
+            </button>
             <div className="flex chat chat-start justify-between items-center px-1 text-sm">
               <textarea
                 id="prompt"
@@ -192,9 +222,7 @@ export default function Home() {
                 <button type="button" onClick={handlePromptFocus} className="flex items-end p-2 rounded-md hover:bg-zinc-900/10">
                   <PencilIcon className="w-5 h-5" />
                 </button>
-                <button type="button" onClick={handleImageFocus} className="flex items-end p-2 rounded-md hover:bg-zinc-900/10">
-                  <PhotoIcon className="w-5 h-5" />
-                </button>
+                <input ref={fileRef} type="file" accept="image/png, image/jpeg" className="hidden" onChange={(e) => handleChange(e)} />
               </div>
               
             </div>
