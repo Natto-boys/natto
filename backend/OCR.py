@@ -50,9 +50,9 @@ class OCR:
                         prompt_str = block_text
                         print(
                             "updating prompt text: "
-                            + prompt_str
-                            + " "
                             + str(prompt_bottom_y)
+                            + " "
+                            + prompt_str
                         )
                 continue
             # if block is prompt AND more (i.e. response), return both
@@ -73,7 +73,7 @@ class OCR:
                             + response_str
                         )
         if prompt_str:
-            print("Combining prompt and response: ")
+            print("Combining prompt and response: " + prompt_str + " " + response_str)
             return prompt_str + " " + response_str
         return ""
 
