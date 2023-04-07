@@ -129,7 +129,7 @@ export default function Home() {
   }
 
   const handleUpload = (bytestr: string) => {
-      const regex = /^data:image\/png;base64,/;
+      const regex = /^data:image\/png;base64,|data:image\/jpeg;base64,/;
       const result = bytestr.replace(regex, '');
 
       const reqBody = {
