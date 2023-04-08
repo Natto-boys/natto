@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl secrets set OPENAI_KEY=${{ secrets.OPENAI_KEY }} GCP_CRED_JSON_BASE64=${{ secrets.GCP_CRED_JSON_BASE64 }}-t ${{ secrets.FLY_API_TOKEN_NATTO }} --config ./fly.staging.toml
+      - run: flyctl secrets set OPENAI_KEY=${{ secrets.OPENAI_KEY }} -t ${{ secrets.FLY_API_TOKEN_NATTO }} --config ./fly.staging.toml
       - run: flyctl deploy --remote-only -t ${{ secrets.FLY_API_TOKEN_NATTO }} --config ./fly.staging.toml
         env:
           FLYCTL_AUTH_TOKEN: ${{ secrets.FLY_API_TOKEN_NATTO }} # no longer necessary with -t flag?

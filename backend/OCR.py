@@ -1,23 +1,16 @@
 import base64
 from google.cloud import vision
-from google.oauth2.credentials import Credentials
 import io
-import json
 
 from typing import List
 from pathlib import Path
-from decouple import config
 
 from hinge_prompts import ALL_PROMPTS
 
 
-class OCR:
+class OCR():
     def __init__(self) -> None:
-        cred_bytes = base64.b64decode(config("GCP_CRED_JSON_BASE64"))
-        cred_json = json.loads(cred_bytes.decode("utf-8"))
-        # cred_json.pop("type") # not accepted by Credentials
-        self._creds = Credentials.from_authorized_user_info(cred_json)
-        self.client = vision.ImageAnnotatorClient(credentials=self._creds)
+        self.client = vision.ImageAnnotatorClient()
 
     @staticmethod
     def extract_prompt_from_ocr_text(
@@ -43,7 +36,7 @@ class OCR:
         with io.open(path, "rb") as image_file:
             content = image_file.read()
         return content
-
+    
     @staticmethod
     def base64_to_bytes(base64_string: str) -> bytes:
         return base64.b64decode(base64_string)
