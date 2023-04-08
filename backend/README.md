@@ -1,17 +1,10 @@
 # HingeGPT Backend
 
-Handles:
-* OCR on Hinge screenshots to extract text
-* Stream GPT responses
+Stream GPT responses for dating app prompts.
 
 # Run
 ### fly.io
-This repo is configured to deploy on fly.io through a github action in `../.github/workflows/backend-*.yml`.
-
-**Monitoring:**
-* https://fly.io/dashboard/natto
-* OCR: console.cloud.google.com/apis/dashboard
-* Open AI: https://platform.openai.com/account/usage
+This repo is configured to deploy on fly.io through a github action in `../.github/workflows/fly.yml`.
 
 
 ### Debug locally
@@ -25,7 +18,6 @@ To make available on web:
 ```
 ngrok http 8080
 ```
-Use Postman or another tool to connect to e.g. `localhost:8080`, and send jsons by websocket.
 
 ### Run Docker locally
 
@@ -62,19 +54,16 @@ Sends a Hinge profile name and prompt text, to respond to.
 **Stream response**
 ```json
 {
-  "event": "text",
   "text": "",
   "stream": "start"
 }
 ------
 {
-  "event": "text",
   "text": "This is the nature of...",
   "stream": "streaming"
 }
 ------
 {
-  "event": "text",
   "text": "",
   "stream": "stop"
 }
@@ -83,7 +72,7 @@ Sends a Hinge profile name and prompt text, to respond to.
 ### **********`image`********** event
 ```json
 { 
- "event": "image",
+ "event": "text",
  "content": "/9j/4AAQSkZJRgABAQAAAQABAAD/...", # base64 encoded string of image
 }
 ```
@@ -92,7 +81,6 @@ Sends a Hinge profile name and prompt text, to respond to.
 Note: returns `""` if it cannot find any hinge prompt type text in an image.
 ```json
 {
-  "event": "image",
   "text": "What I order for the table Wood varnish",
 }
 ```
