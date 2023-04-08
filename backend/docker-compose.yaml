@@ -1,6 +1,6 @@
 services:
   continuousgpt:
-    image: jmahbubani/natto-server:2022-04-04
+    image: birudeghi/continuousgpt:beta
     restart: always
     environment:
       - OPENAI_KEY=<your-api-key>
