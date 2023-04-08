@@ -204,8 +204,8 @@ export default function Home() {
                 <p className="flex text-center horizontal-line text-sm w-full text-zinc-700">OR</p>
                 <div className="flex items-center mt-4 w-full h-16 py-2 px-1 bg-transparent justify-between focus-within:border-zinc-100/80 focus-within:ring-0">
               <input type="name" ref={nameRef} value={name} onChange={(e) => handleName(e.target.value)} className="duration-150 w-3/5 pl-2 bg-transparent border-none text-zinc-900 focus:ring-0 text-2xl font-semibold" />
-              <button type="button" onClick={handleNameFocus} className="flex items-center p-2 rounded-md hover:bg-zinc-900/10">
-                <PencilIcon className="w-5 h-5" />
+              <button type="button" id="nameEdit" onClick={handleNameFocus} className="flex items-center p-2 rounded-md hover:bg-zinc-900/10">
+                <PencilIcon id="nameEditIcon" className="w-5 h-5" />
               </button>
             </div>
               <div className="flex chat chat-start justify-between items-center px-1 text-sm">
@@ -230,8 +230,8 @@ export default function Home() {
                 </div>
                 
                 <div className="flex flex-col gap-4">
-                  <button type="button" onClick={handlePromptFocus} className="flex items-end p-2 rounded-md hover:bg-zinc-900/10">
-                    <PencilIcon className="w-5 h-5" />
+                  <button type="button" id="promptEdit" onClick={handlePromptFocus} className="flex items-end p-2 rounded-md hover:bg-zinc-900/10">
+                    <PencilIcon id="promptEditIcon" className="w-5 h-5" />
                   </button>
                 </div>
                 
@@ -240,8 +240,8 @@ export default function Home() {
               <div className="flex chat chat-end flex-col items-center justify-center w-full gap-4 mt-4 sm:flex-row">
                   <div className="flex flex-row items-center chat-bubble duration-150 text-zinc-100 bg-violet-700 font-light focus:ring-0 text-lg">
                     {serverRes}
-                    <button type="button" onClick={handleCopy} className="flex items-end p-2 rounded-md hover:bg-zinc-900/10">
-                      <DocumentDuplicateIcon className="w-5 h-5" />
+                    <button type="button" id="copyResponse" onClick={handleCopy} className="flex items-end p-2 rounded-md hover:bg-zinc-900/10">
+                      <DocumentDuplicateIcon id="copyResponseIcon" className="w-5 h-5" />
                     </button>
                   </div>
                   
