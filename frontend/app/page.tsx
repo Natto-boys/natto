@@ -23,7 +23,7 @@ export default function Home() {
   const promptHeadRef = useRef<HTMLTextAreaElement>(null);
   const promptRef = useRef<HTMLTextAreaElement>(null);
   
-  const SOCKET_URL = 'wss://natto-backend-staging.fly.dev/';
+  const SOCKET_URL = 'wss://natto-backend-prod.fly.dev/';
   const COPY_CLIPBOARD = "Copied to clipboard.";
 
   const {
