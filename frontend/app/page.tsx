@@ -8,7 +8,8 @@ import { ToastType, ToastMessage } from "app/components/toast";
 
 export default function Home() {
   const [name, setName] = useState("Maria");
-  const [text, setText] = useState("Do you agree or disagree that your mum should not take you on holiday to Napa 🙃");
+  const [promptHead, setPromptHead] = useState("Do you agree or disagree that");
+  const [text, setText] = useState("Your mum should not take you on holiday to Napa 🙃");
   const [toastContent, setToastContent] = useState<Object[]>([]);
   const [serverRes, setServerRes] = useState("");
   const [isCopy, setIsCopy]  = useState(false);
@@ -19,6 +20,7 @@ export default function Home() {
   const resRef = useRef("");
   const fileRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
+  const promptHeadRef = useRef<HTMLInputElement>(null);
   const promptRef = useRef<HTMLTextAreaElement>(null);
   
   const SOCKET_URL = 'wss://natto-backend-staging.fly.dev/';
@@ -59,7 +61,9 @@ export default function Home() {
         break;
       case "image":
         console.log("Receiving OCR text...")
-        setText(data.text);
+        setName(data.name);
+        setPromptHead(data.prompt);
+        setText(data.response);
         setIsUpload(false);
         break;
     }
@@ -104,7 +108,7 @@ export default function Home() {
       const reqBody = {
         event: "text",
         name: name,
-        text: text
+        text: promptHead + " " + text
       }
       
       sendJsonMessage(reqBody);
@@ -151,6 +155,10 @@ export default function Home() {
     } 
   }
 
+  const handlePromptHead = (text: string) => {
+    setPromptHead(text);
+  }
+
   const handleCopy = () => {
     navigator.clipboard.writeText(serverRes);
     setIsCopy(true);
@@ -158,11 +166,11 @@ export default function Home() {
   }
 
   const handlePromptFocus = () => {
-    if (promptRef.current) {
-      promptRef.current.focus();
-      promptRef.current.setSelectionRange(
-        promptRef.current.value.length,
-        promptRef.current.value.length
+    if (promptHeadRef.current) {
+      promptHeadRef.current.focus();
+      promptHeadRef.current.setSelectionRange(
+        promptHeadRef.current.value.length,
+        promptHeadRef.current.value.length
       );
     } 
   }
@@ -197,16 +205,22 @@ export default function Home() {
           }}
         >
           <div className="flex flex-col">
-                <button type="button" onClick={handleImageFocus} className={`rounded-full w-4/5 mb-8 h-12 self-center text-lg bg-violet-600 text-white hover:bg-violet-900/30 ${loadingClassname}`}>
+                <button type="button" id="screenshot" onClick={handleImageFocus} className={`flex items-center justify-center rounded-full w-4/5 mb-8 h-12 self-center text-lg bg-violet-600 text-white hover:bg-violet-900/30 ${loadingClassname}`}>
                   Upload screenshot
+                  <div className="pl-2"> 
+                    <span className="badge badge-accent badge-outline badge-sm">BETA</span>
+                  </div>
                 </button>
                 <input ref={fileRef} type="file" accept="image/png, image/jpeg" className="hidden" onChange={(e) => handleChange(e)} />
                 <p className="flex text-center horizontal-line text-sm w-full text-zinc-700">OR</p>
                 <div className="flex items-center mt-4 w-full h-16 py-2 px-1 bg-transparent justify-between focus-within:border-zinc-100/80 focus-within:ring-0">
-              <input type="name" ref={nameRef} value={name} onChange={(e) => handleName(e.target.value)} className="duration-150 w-3/5 pl-2 bg-transparent border-none text-zinc-900 focus:ring-0 text-2xl font-semibold" />
-              <button type="button" id="nameEdit" onClick={handleNameFocus} className="flex items-center p-2 rounded-md hover:bg-zinc-900/10">
-                <PencilIcon id="nameEditIcon" className="w-5 h-5" />
-              </button>
+              <div className="flex justify-between w-full" id="nameDiv">
+                <input type="name" ref={nameRef} value={name} onChange={(e) => handleName(e.target.value)} className="duration-150 w-3/5 pl-2 bg-transparent border-none text-zinc-900 focus:ring-0 text-2xl font-semibold" />
+                <button type="button" id="nameEdit" onClick={handleNameFocus} className="flex items-center p-2 rounded-md hover:bg-zinc-900/10">
+                  <PencilIcon id="nameEditIcon" className="w-5 h-5" />
+                </button>
+              </div>
+              
             </div>
               <div className="flex chat chat-start justify-between items-center px-1 text-sm">
                 <div className="flex gap-2 flex-col justify-end">
@@ -214,18 +228,22 @@ export default function Home() {
                   <div className="chat-bubble mt-6 w-3/8 inline-flex justify-center items-center bg-white">
                     <div className="loader-dark" />
                   </div> : 
-                  <>
-                  <textarea
-                    id="prompt"
-                    ref={promptRef}
-                    name="text"
-                    value={text}
-                    minLength={1}
-                    onChange={(e) => setText(e.target.value)}
-                    rows={Math.max(5, text.split("\n").length)}
-                    className="w-full chat-bubble bg-white font-serif bg-transparent border-0 appearance-none p-6 resize-none hover:resize text-zinc-900 placeholder-zinc-500 focus:ring-0 text-2xl"
-                  />
-                  </>
+                  <div className="chat-bubble bg-white">
+                    <div className="w-full pl-3 pt-4" id="promptHead">
+                      <input ref={promptHeadRef} id="promptHeadInput" value={promptHead} onChange={(e) => handlePromptHead(e.target.value)} className="duration-150 w-full bg-transparent border-none text-zinc-900 focus:ring-0 text-md font-bold" />
+                    </div>
+                    <textarea
+                      id="prompt"
+                      ref={promptRef}
+                      name="text"
+                      value={text}
+                      cols={40}
+                      minLength={1}
+                      onChange={(e) => setText(e.target.value)}
+                      rows={Math.max(5, text.split("\n").length)}
+                      className="w-full font-serif bg-transparent border-0 appearance-none p-6 resize-none hover:resize text-zinc-900 placeholder-zinc-500 focus:ring-0 text-2xl"
+                    />
+                  </div>
                     }
                 </div>
                 
