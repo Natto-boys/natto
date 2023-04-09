@@ -6,8 +6,8 @@ import websockets
 from typing import Dict
 from websockets.server import WebSocketServerProtocol
 from websockets.exceptions import PayloadTooBig
-from SimpleChatBridge import SimpleChatBridge
-from OCR import OCR, ImageText
+from backend.SimpleChatBridge import SimpleChatBridge
+from backend.OCR import OCR, ImageText, base64_to_bytes
 
 HTTP_SERVER_PORT = 8080
 MAX_SIZE = 10*(2 ** 20) # 10 MB
@@ -57,7 +57,7 @@ async def respond(ws: WebSocketServerProtocol):
                 if data.get("content") is None:
                     await on_error_response("Missing 'content' field")
                     continue
-                content = ocr.base64_to_bytes(data["content"])
+                content = base64_to_bytes(data["content"])
                 image_text = ocr.get_text_from_image(content)
                 await on_image_response(image_text)
         except PayloadTooBig as e:
