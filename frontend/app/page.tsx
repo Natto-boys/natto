@@ -120,6 +120,7 @@ export default function Home() {
             console.log('file: ', reader.result);
             if (typeof reader.result === 'string') {
                 handleUpload(reader.result);
+                setName("");
                 setIsUpload(true);
             }
         }
