@@ -163,7 +163,7 @@ class OCR:
             blocks = response.full_text_annotation.pages[0].blocks  # always first page
             prompt, response = OCR.get_prompt_response_from_blocks(blocks)                
             name = OCR.get_name_from_blocks(blocks)
-            return ImageText(prompt, response, name)
+            return ImageText(name, prompt, response)
         else:
             print("No text from GCP")
             return ImageText()
