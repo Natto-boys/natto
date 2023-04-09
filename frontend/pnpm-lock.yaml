@@ -15,6 +15,7 @@ specifiers:
   '@vercel/og': ^0.0.27
   autoprefixer: ^10.4.13
   base-x: ^4.0.0
+  classnames: ^2.3.2
   daisyui: ^2.51.5
   eslint: 8.31.0
   eslint-config-next: 13.1.1
@@ -29,6 +30,7 @@ specifiers:
   tailwindcss: ^3.2.4
   ts-jest: ^29.0.5
   typescript: 4.9.4
+  usehooks-ts: ^2.9.1
   zod: ^3.20.2
 
 dependencies:
@@ -42,6 +44,7 @@ dependencies:
   '@vercel/analytics': 0.1.7-beta.1_react@18.2.0
   '@vercel/og': 0.0.27
   base-x: 4.0.0
+  classnames: 2.3.2
   daisyui: 2.51.5_gbtt6ss3tbiz4yjtvdr6fbrj44
   eslint: 8.31.0
   eslint-config-next: 13.1.1_iukboom6ndih5an6iafl45j2fe
@@ -51,6 +54,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-use-websocket: 4.3.1_biqbaboplfbrettd7655fr4n2y
   typescript: 4.9.4
+  usehooks-ts: 2.9.1_biqbaboplfbrettd7655fr4n2y
   zod: 3.20.2
 
 devDependencies:
@@ -1551,6 +1555,10 @@ packages:
   /cjs-module-lexer/1.2.2:
     resolution: {integrity: sha512-cOU9usZw8/dXIXKtwa8pM0OTJQuJkxMN6w30csNRUerHfeQ5R6U3kkU/FtJeIf3M202OHfY2U8ccInBG7/xogA==}
     dev: true
+
+  /classnames/2.3.2:
+    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
+    dev: false
 
   /client-only/0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
@@ -4426,6 +4434,17 @@ packages:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
     dependencies:
       punycode: 2.2.0
+    dev: false
+
+  /usehooks-ts/2.9.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-2FAuSIGHlY+apM9FVlj8/oNhd+1y+Uwv5QNkMQz1oSfdHk4PXo1qoCw9I5M7j0vpH8CSWFJwXbVPeYDjLCx9PA==}
+    engines: {node: '>=16.15.0', npm: '>=8'}
+    peerDependencies:
+      react: ^16.8.0  || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0  || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /util-deprecate/1.0.2:

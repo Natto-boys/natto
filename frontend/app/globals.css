@@ -27,6 +27,46 @@
   animation: load 1s infinite;
 }
 
+.horizontal-line {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto;
+  margin: 0 auto;
+  max-width: unset;
+  width: 80%;
+}
+
+.horizontal-line:before,
+.horizontal-line:after {
+  --lineSize: 2px;
+  --offset: calc(var(--lineSize)*0.5);
+  --topAlign: calc(50% - var(--offset));
+  background-color: #c9c9c9;
+  content: "";
+  height: var(--lineSize);
+  position: absolute;
+  top: var(--topAlign);
+  width: 40%;
+}
+
+.horizontal-line:before {
+  left: 0;
+}
+
+.horizontal-line:after {
+  right: 0;
+}
+
+.loader-dark {
+  width: 30px; /* control the size */
+  aspect-ratio: 8/5;
+  --_g: no-repeat radial-gradient(#000 68%,#0000 71%);
+  -webkit-mask: var(--_g),var(--_g),var(--_g);
+  -webkit-mask-size: 25% 40%;
+  background: black;
+  animation: load 1s infinite;
+}
+
 @keyframes load {
   0%    {-webkit-mask-position: 0% 0%  ,50% 0%  ,100% 0%  }
   16.67%{-webkit-mask-position: 0% 100%,50% 0%  ,100% 0%  }
