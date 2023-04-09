@@ -1,3 +1,4 @@
+from dataclasses import asdict
 import json
 import uuid
 import asyncio
@@ -6,7 +7,7 @@ from typing import Dict
 from websockets.server import WebSocketServerProtocol
 from websockets.exceptions import PayloadTooBig
 from SimpleChatBridge import SimpleChatBridge
-from OCR import OCR
+from OCR import OCR, ImageText
 
 HTTP_SERVER_PORT = 8080
 MAX_SIZE = 5*(2 ** 20) # 5 MB
@@ -20,8 +21,8 @@ async def respond(ws: WebSocketServerProtocol):
         resObject = {"event": "text", "text": data, "stream": streaming_status}
         await on_response(resObject)
 
-    async def on_image_response(data: str) -> None:
-        resObject = {"event": "image", "text": data}
+    async def on_image_response(data: ImageText) -> None:
+        resObject = {"event": "image", **asdict(data)}
         await on_response(resObject)
 
     async def on_error_response(text: str) -> None:
@@ -57,8 +58,8 @@ async def respond(ws: WebSocketServerProtocol):
                     await on_error_response("Missing 'content' field")
                     continue
                 content = ocr.base64_to_bytes(data["content"])
-                text = ocr.get_text_from_image(content)
-                await on_image_response(text)
+                image_text = ocr.get_text_from_image(content)
+                await on_image_response(image_text)
         except PayloadTooBig as e:
             await on_error_response(
                 f"Filesize too large, max size is {MAX_SIZE / (2 ** 20)} MB"
