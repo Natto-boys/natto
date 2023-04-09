@@ -203,7 +203,7 @@ export default function Home() {
           }}
         >
           <div className="flex flex-col">
-                <button type="button" id="screenshot" onClick={handleImageFocus} className={`flex items-center justify-center rounded-full w-4/5 mb-8 h-12 self-center text-lg bg-violet-600 text-white hover:bg-violet-900/30 ${loadingClassname}`}>
+                <button type="button" id="screenshot" onClick={handleImageFocus} className={`flex items-center justify-center rounded-full w-4/5 mb-4 h-12 self-center text-lg bg-violet-600 text-white hover:bg-violet-900/30 ${loadingClassname}`}>
                   Upload screenshot
                   <div className="pl-2"> 
                     <span className="badge badge-accent badge-outline badge-sm">BETA</span>
@@ -211,7 +211,7 @@ export default function Home() {
                 </button>
                 <input ref={fileRef} type="file" accept="image/png, image/jpeg" className="hidden" onChange={(e) => handleChange(e)} />
                 <p className="flex text-center horizontal-line text-sm w-full text-zinc-700">OR</p>
-                <div className="flex items-center mt-4 w-full h-16 py-2 px-1 bg-transparent justify-between focus-within:border-zinc-100/80 focus-within:ring-0">
+                <div className="flex items-center w-full h-16 py-2 px-1 bg-transparent justify-between focus-within:border-zinc-100/80 focus-within:ring-0">
               <div className="flex justify-between w-full" id="nameDiv">
                 <input type="name" ref={nameRef} value={name} onChange={(e) => handleName(e.target.value)} className="duration-150 w-3/5 pl-2 bg-transparent border-none text-zinc-900 focus:ring-0 text-2xl font-semibold" />
                 <button type="button" id="nameEdit" onClick={handleNameFocus} className="flex items-center p-2 rounded-md hover:bg-zinc-900/10">
