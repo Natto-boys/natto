@@ -61,6 +61,7 @@ export default function Home() {
         break;
       case "image":
         console.log("Receiving OCR text...")
+        setServerRes("");
         setName(data.name);
         setPromptHead(data.prompt);
         setText(data.response);
@@ -83,10 +84,6 @@ export default function Home() {
       case "stop":
         setLoading(false);
     }
-  }
-
-  const newToastContent = (newContent: Object) => {
-    setToastContent([...toastContent, newContent]);
   }
 
   const updateServerRes = (text: string) => {
