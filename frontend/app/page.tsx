@@ -20,7 +20,7 @@ export default function Home() {
   const resRef = useRef("");
   const fileRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
-  const promptHeadRef = useRef<HTMLInputElement>(null);
+  const promptHeadRef = useRef<HTMLTextAreaElement>(null);
   const promptRef = useRef<HTMLTextAreaElement>(null);
   
   const SOCKET_URL = 'wss://natto-backend-staging.fly.dev/';
@@ -230,7 +230,15 @@ export default function Home() {
                   </div> : 
                   <div className="chat-bubble bg-white">
                     <div className="w-full pl-3 pt-4" id="promptHead">
-                      <input ref={promptHeadRef} id="promptHeadInput" value={promptHead} onChange={(e) => handlePromptHead(e.target.value)} className="duration-150 w-full bg-transparent border-none text-zinc-900 focus:ring-0 text-md font-bold" />
+                      <textarea 
+                      ref={promptHeadRef} 
+                      id="promptHeadInput" 
+                      value={promptHead} 
+                      onChange={(e) => handlePromptHead(e.target.value)} 
+                      minLength={1}
+                      cols={40}
+                      rows={Math.max(2, promptHead.split("\n").length)}
+                      className="duration-150 w-full bg-transparent border-none text-zinc-900 focus:ring-0 text-md font-bold" />
                     </div>
                     <textarea
                       id="prompt"
@@ -241,7 +249,7 @@ export default function Home() {
                       minLength={1}
                       onChange={(e) => setText(e.target.value)}
                       rows={Math.max(5, text.split("\n").length)}
-                      className="w-full font-serif bg-transparent border-0 appearance-none p-6 resize-none hover:resize text-zinc-900 placeholder-zinc-500 focus:ring-0 text-2xl"
+                      className="w-full font-serif bg-transparent border-0 appearance-none pb-6 pt-2 pl-6 pr-6 resize-none hover:resize text-zinc-900 placeholder-zinc-500 focus:ring-0 text-2xl"
                     />
                   </div>
                     }
