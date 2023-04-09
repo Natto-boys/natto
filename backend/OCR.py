@@ -15,7 +15,7 @@ from hinge_prompts import ALL_PROMPTS
 
 # Regex to capture 12 or 24 hour time from OCR
 TIME_REGEX = r"([0-1]?[0-9]|2[0-3]):[0-5][0-9]"
-EXCLUDE_NAMES = [":"]
+EXCLUDE_NAMES = [":", "..."]
 
 @dataclass
 class ImageText:
