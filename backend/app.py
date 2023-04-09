@@ -10,7 +10,7 @@ from SimpleChatBridge import SimpleChatBridge
 from OCR import OCR, ImageText
 
 HTTP_SERVER_PORT = 8080
-MAX_SIZE = 5*(2 ** 20) # 5 MB
+MAX_SIZE = 10*(2 ** 20) # 10 MB
 
 async def respond(ws: WebSocketServerProtocol):
     async def on_response(response: Dict[str, str]) -> None:
