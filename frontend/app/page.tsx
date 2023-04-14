@@ -226,7 +226,7 @@ export default function Home() {
           }}
         >
           <div className="flex flex-col">
-                <button type="button" id="screenshot" onClick={handleImageFocus} className={`flex items-center justify-center rounded-full w-4/5 mb-4 h-8 self-center text-lg bg-violet-600 text-white hover:bg-violet-900/30 ${loadingClassname}`}>
+                <button type="button" id="screenshot" onClick={handleImageFocus} className={`flex items-center justify-center rounded-full w-4/5 mb-4 h-8 self-center text-md text-semibold bg-violet-600 text-white hover:bg-violet-900/30 ${loadingClassname}`}>
                   Upload screenshot
                   <div className="pl-2"> 
                     <span className="badge badge-accent badge-outline badge-xs">BETA</span>
