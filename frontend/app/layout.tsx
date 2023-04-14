@@ -36,7 +36,7 @@ export default function RootLayout({
           process.env.ENABLE_VERCEL_ANALYTICS ? <Analytics /> : null
         }
 
-        <div className="text-md sm:text-lg font-bold text-center text-gray-800 max-w-7xl mx-auto pt-6 pb-8 px-6">
+        <div className="text-md sm:text-lg font-bold text-center text-gray-800 max-w-7xl mx-auto pt-6 pb-4 px-6">
           <p>
             Generate mediocre Hinge opening lines.
           </p>
