@@ -232,9 +232,12 @@ export default function Home() {
                     <span className="badge badge-accent badge-outline badge-xs">BETA</span>
                   </div>
                 </button>
-                <div className="flex w-4/5 items-center justify-end self-center mb-2">
-                  <div className="pr-2">
-                    <p className="flex text-center text-md w-full text-zinc-700">Examples</p>
+                <input ref={fileRef} type="file" accept="image/png, image/jpeg" className="hidden" onChange={(e) => handleChange(e)} />
+                <p className="flex text-center horizontal-line text-sm w-full text-zinc-700">OR</p>
+                <div className="flex flex-col items-center w-full pb-2 pt-4 px-1 bg-transparent justify-between focus-within:border-zinc-100/80 focus-within:ring-0">
+                <div className="flex w-full items-center justify-end self-center mb-2">
+                  <div className="pr-3">
+                    <p className="flex text-center text-md w-full text-zinc-700">Try it out!</p>
                   </div>
                   <div className="btn-group">
                     <input type="radio" name="options" data-title="1" id="example" onChange={() => handleExample(1)} className="btn btn-sm w-12" />
@@ -242,9 +245,6 @@ export default function Home() {
                     <input type="radio" name="options" data-title="3" id="example" onChange={() => handleExample(3)} className="btn btn-sm w-12" />
                   </div>
                 </div>
-                <input ref={fileRef} type="file" accept="image/png, image/jpeg" className="hidden" onChange={(e) => handleChange(e)} />
-                <p className="flex text-center horizontal-line text-sm w-full text-zinc-700">OR</p>
-                <div className="flex items-center w-full h-16 py-2 px-1 bg-transparent justify-between focus-within:border-zinc-100/80 focus-within:ring-0">
               <div className="flex justify-between w-full" id="nameDiv">
                 <input type="name" ref={nameRef} value={name} onChange={(e) => handleName(e.target.value)} className="duration-150 w-3/5 pl-2 bg-transparent border-none text-zinc-900 focus:ring-0 text-2xl font-semibold" />
                 <button type="button" id="nameEdit" onClick={handleNameFocus} className="flex items-center p-2 rounded-md hover:bg-zinc-900/10">
