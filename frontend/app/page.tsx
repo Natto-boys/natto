@@ -28,10 +28,7 @@ export default function Home() {
   const [name, setName] = useState(examplePrompts[0].name);
   const [promptHead, setPromptHead] = useState(examplePrompts[0].promptHead);
   const [text, setText] = useState(examplePrompts[0].text);
-  const [toastContent, setToastContent] = useState<Object[]>([]);
-  const [ex1Selected, setEx1Selected] = useState(true);
-  const [ex2Selected, setEx2Selected] = useState(false);
-  const [ex3Selected, setEx3Selected] = useState(false);
+  const [selectedEx, setSelectedEx] = useState(0);
   const [serverRes, setServerRes] = useState("");
   const [isCopy, setIsCopy] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -179,6 +176,8 @@ export default function Home() {
     setPromptHead(text);
   }
 
+  const isSelected = (id: number) => selectedEx == id ? true : false
+
   const handleCopy = () => {
     navigator.clipboard.writeText(serverRes);
     setIsCopy(true);
@@ -207,6 +206,7 @@ export default function Home() {
     setName(prompt.name);
     setPromptHead(prompt.promptHead);
     setText(prompt.text);
+    setSelectedEx(id);
   }
 
   const loadingClassname = isUpload ? "loading" : "";
@@ -246,9 +246,9 @@ export default function Home() {
                 <p className="flex text-center text-md w-full text-zinc-700">Try it out!</p>
               </div>
               <div className="btn-group" id="example">
-                <input type="radio" name="options" data-title="1" id="exampleButton" onChange={() => handleExample(0)} className="btn btn-sm w-12" />
-                <input type="radio" name="options" data-title="2" id="exampleButton" onChange={() => handleExample(1)} className="btn btn-sm w-12" />
-                <input type="radio" name="options" data-title="3" id="exampleButton" onChange={() => handleExample(2)} className="btn btn-sm w-12" />
+                <input type="radio" name="options" data-title="1" id="exampleButton" onChange={() => handleExample(0)} className="btn btn-sm w-12" checked={isSelected(0)} />
+                <input type="radio" name="options" data-title="2" id="exampleButton" onChange={() => handleExample(1)} className="btn btn-sm w-12" checked={isSelected(1)} />
+                <input type="radio" name="options" data-title="3" id="exampleButton" onChange={() => handleExample(2)} className="btn btn-sm w-12" checked={isSelected(2)} />
               </div>
             </div>
             <div className="flex justify-between w-full" id="nameDiv">
