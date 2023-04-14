@@ -186,19 +186,19 @@ export default function Home() {
   const handleExample = (num: number) => {
     switch (num) {
       case 1:
-        setName("Rachel");
-        setPromptHead("My best Dad Joke");
-        setText("What do you call a Russian with 3 testicles? ........Hudyanick Abolockov!!!!!!!!!!!");
+        setName("Lara");
+        setPromptHead("I'm convinced that");
+        setText("I would survive the hunger games");
         break;
       case 2:
-        setName("Maxime");
-        setPromptHead("Dating me is like");
-        setText("Cracking your back");
+        setName("Maria");
+        setPromptHead("Do you agree or disagree that");
+        setText("Your mum should not take you on holiday to Napa 🙃");
         break;
       case 3:
-        setName("Sammy");
-        setPromptHead("Best travel story");
-        setText("missed my flight to mykonos form grabbing a breakfast burrito");
+        setName("Nana");
+        setPromptHead("A life goal of mine");
+        setText("live on a farm");
         break;
     }
   }
