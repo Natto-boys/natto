@@ -47,12 +47,6 @@ export default function Home() {
   const SOCKET_URL = 'wss://natto-backend-prod.fly.dev/';
   const COPY_CLIPBOARD = "Copied to clipboard.";
 
-  function setExamplePrompt({ id }) {
-    const prompt = examplePrompts[id];
-    setName(prompt.name);
-    setPromptHead(prompt.promptHead);
-    setText(prompt.text);
-  }
 
   const {
     sendMessage,
@@ -208,18 +202,11 @@ export default function Home() {
 
   }
 
-  const handleExample = (num: number) => {
-    switch (num) {
-      case 1:
-        setExamplePrompt({ id: 0 })
-        break;
-      case 2:
-        setExamplePrompt({ id: 1 })
-        break;
-      case 3:
-        setExamplePrompt({ id: 2 })
-        break;
-    }
+  const handleExample = (id: number) => {
+    const prompt = examplePrompts[id];
+    setName(prompt.name);
+    setPromptHead(prompt.promptHead);
+    setText(prompt.text);
   }
 
   const loadingClassname = isUpload ? "loading" : "";
@@ -259,9 +246,9 @@ export default function Home() {
                 <p className="flex text-center text-md w-full text-zinc-700">Try it out!</p>
               </div>
               <div className="btn-group" id="example">
-                <input type="radio" name="options" data-title="1" id="exampleButton" onChange={() => handleExample(1)} className="btn btn-sm w-12" />
-                <input type="radio" name="options" data-title="2" id="exampleButton" onChange={() => handleExample(2)} className="btn btn-sm w-12" />
-                <input type="radio" name="options" data-title="3" id="exampleButton" onChange={() => handleExample(3)} className="btn btn-sm w-12" />
+                <input type="radio" name="options" data-title="1" id="exampleButton" onChange={() => handleExample(0)} className="btn btn-sm w-12" />
+                <input type="radio" name="options" data-title="2" id="exampleButton" onChange={() => handleExample(1)} className="btn btn-sm w-12" />
+                <input type="radio" name="options" data-title="3" id="exampleButton" onChange={() => handleExample(2)} className="btn btn-sm w-12" />
               </div>
             </div>
             <div className="flex justify-between w-full" id="nameDiv">
