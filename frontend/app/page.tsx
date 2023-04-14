@@ -11,6 +11,9 @@ export default function Home() {
   const [promptHead, setPromptHead] = useState("Do you agree or disagree that");
   const [text, setText] = useState("Your mum should not take you on holiday to Napa 🙃");
   const [toastContent, setToastContent] = useState<Object[]>([]);
+  const [ex1Selected, setEx1Selected] = useState(false);
+  const [ex2Selected, setEx2Selected] = useState(false);
+  const [ex3Selected, setEx3Selected] = useState(false);
   const [serverRes, setServerRes] = useState("");
   const [isCopy, setIsCopy]  = useState(false);
   const [loading, setLoading] = useState(false);
@@ -180,6 +183,26 @@ export default function Home() {
     
   }
 
+  const handleExample = (num: number) => {
+    switch (num) {
+      case 1:
+        setName("Rachel");
+        setPromptHead("My best Dad Joke");
+        setText("What do you call a Russian with 3 testicles? ........Hudyanick Abolockov!!!!!!!!!!!");
+        break;
+      case 2:
+        setName("Maxime");
+        setPromptHead("Dating me is like");
+        setText("Cracking your back");
+        break;
+      case 3:
+        setName("Sammy");
+        setPromptHead("Best travel story");
+        setText("missed my flight to mykonos form grabbing a breakfast burrito");
+        break;
+    }
+  }
+
   const loadingClassname = isUpload ? "loading" : "";
 
   const isDisabled = () => {
@@ -203,12 +226,22 @@ export default function Home() {
           }}
         >
           <div className="flex flex-col">
-                <button type="button" id="screenshot" onClick={handleImageFocus} className={`flex items-center justify-center rounded-full w-4/5 mb-4 h-12 self-center text-lg bg-violet-600 text-white hover:bg-violet-900/30 ${loadingClassname}`}>
+                <button type="button" id="screenshot" onClick={handleImageFocus} className={`flex items-center justify-center rounded-full w-4/5 mb-4 h-8 self-center text-lg bg-violet-600 text-white hover:bg-violet-900/30 ${loadingClassname}`}>
                   Upload screenshot
                   <div className="pl-2"> 
-                    <span className="badge badge-accent badge-outline badge-sm">BETA</span>
+                    <span className="badge badge-accent badge-outline badge-xs">BETA</span>
                   </div>
                 </button>
+                <div className="flex w-4/5 items-center justify-end self-center mb-2">
+                  <div className="pr-2">
+                    <p className="flex text-center text-md w-full text-zinc-700">Examples</p>
+                  </div>
+                  <div className="btn-group">
+                    <input type="radio" name="options" data-title="1" id="example" onChange={() => handleExample(1)} className="btn btn-sm w-12" />
+                    <input type="radio" name="options" data-title="2" id="example" onChange={() => handleExample(2)} className="btn btn-sm w-12" />
+                    <input type="radio" name="options" data-title="3" id="example" onChange={() => handleExample(3)} className="btn btn-sm w-12" />
+                  </div>
+                </div>
                 <input ref={fileRef} type="file" accept="image/png, image/jpeg" className="hidden" onChange={(e) => handleChange(e)} />
                 <p className="flex text-center horizontal-line text-sm w-full text-zinc-700">OR</p>
                 <div className="flex items-center w-full h-16 py-2 px-1 bg-transparent justify-between focus-within:border-zinc-100/80 focus-within:ring-0">
