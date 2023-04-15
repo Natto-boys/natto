@@ -16,7 +16,7 @@ export default function Head({ title, subtitle }: { title: string; subtitle: str
       <meta name="description" content={subtitle} />
       <meta name="theme-color" content="#000000" />
       <meta name="title" content={title} />
-      <meta name="keywords" content="envshare, secure, secrets, share, environment, variables" />
+      <meta name="keywords" content="Hinge, dating, entertainment, humor, Tinder, GPT, AI" />
       <meta name="language" content="English" />
       <meta name="revisit-after" content="7 days" />
       <meta name="robots" content="all" />
@@ -25,11 +25,12 @@ export default function Head({ title, subtitle }: { title: string; subtitle: str
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
       <meta property="og:url" content={baseUrl} />
-      <meta property='og:image' content={url.toString()} />
+      {/* <meta property='og:image' content={url.toString()} /> */}
+      <meta property="og:image" content="https://i.ibb.co/DpbSMJS/hingegpt.png"/>
       <meta property='og:title' content={title} />
       <meta property='og:description' content={subtitle} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
+      {/* <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" /> */}
 
       {/* Twitter */}
       <meta property="twitter:card" content="summary_large_image" />
