@@ -2,17 +2,15 @@ from dataclasses import dataclass
 from typing import Dict, List, Tuple
 import yaml
 
-import openai
-
 @dataclass
 class Recipe:
     max_tokens: int
     model: str
     temperature: float
-    system_prompt: str
-    example_convos: List[Dict[str, str]]
     user_prompt: str
     variables: List[str]
+    system_prompt: str
+    example_convos: List[Dict[str, str]]
 
 @dataclass
 class OpenAIInput:
@@ -24,12 +22,12 @@ class OpenAIInput:
 @dataclass
 class Variables:
     match_name: str
-    user_name: str = "{NAME}"
     input_str: str
+    user_name: str = "{NAME}"
 
 def read_yaml(path: str) -> Recipe:
     with open(path, "r") as f:
-        return Recipe(yaml.safe_load(f))
+        return Recipe(**yaml.safe_load(f))
 
 
 def replace_variables_in_str(
@@ -40,38 +38,36 @@ def replace_variables_in_str(
     return input_str
 
 def recipe_to_openai_input(recipe: Recipe, variables: Variables) -> OpenAIInput:
-    # check all the variables in the recipe are in the variable dict
-    for var in recipe.variables:
-        if var not in variables:
-            raise ValueError(f"Variable {var} not in variable dict")
+    # check all the variables in the recipe are present
+    if set(variables.__dict__.keys()) != set(recipe.variables):
+            raise ValueError(f"recipe and variables not the same")
     # replace variables in all Recipe strings
-    recipe.system_prompt = replace_variables_in_str(recipe.system_prompt, variables)
-    recipe.user_prompt = replace_variables_in_str(recipe.user_prompt, variables)
-    for i, convo in enumerate(recipe.example_convos):
-        recipe.example_convos[i]["user"] = replace_variables_in_str(convo["user"], variables)
-        recipe.example_convos[i]["assistant"] = replace_variables_in_str(convo["assistant"], variables)
+    system_prompt = replace_variables_in_str(recipe.system_prompt, variables)
+    user_prompt = replace_variables_in_str(recipe.user_prompt, variables)
+    example_convos = []
+    for convo in recipe.example_convos:
+        example_convos.append(
+            {
+                "input": replace_variables_in_str(convo["input"], variables),
+                "output": replace_variables_in_str(convo["output"], variables),
+            }
+        )
     
-    messages = get_chat_messages(recipe.user_prompt, recipe.system_prompt, recipe.example_convos)
+    messages = get_chat_messages(user_prompt, system_prompt, example_convos)
     return OpenAIInput(
         recipe.max_tokens, recipe.model, recipe.temperature, messages
     )
 
 def get_chat_messages(
     input_str: str,
-    system_prompt: str | None,
-    example_convos: List[Tuple[str, str]] | None,
+    system_prompt: str,
+    example_convos: List[Tuple[str, str]],
 ) -> List[Dict[str, str]]:
     messages = []
     if system_prompt:
         messages.append({"role": "system", "content": system_prompt})
-    for tup in example_convos:
-        messages.append({"role": "user", "content": tup[0]})
-        messages.append({"role": "assistant", "content": tup[1]})
+    for convo in example_convos:
+        messages.append({"role": "user", "content": convo['input']})
+        messages.append({"role": "assistant", "content": convo['output']})
     messages.append({"role": "user", "content": input_str})
     return messages
-
-
-def chat_completion(openai_input: OpenAIInput) -> str:
-    completion = openai.ChatCompletion(**openai_input.__dict__)
-    # get the last message from the completion
-    return completion.choices[0].message.content
