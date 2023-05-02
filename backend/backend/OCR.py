@@ -15,8 +15,12 @@ from backend.data.hinge_prompts import ALL_PROMPTS
 
 # Regex to capture 12 or 24 hour time from OCR
 TIME_REGEX = r"\b([0-1]?[0-9]|2[0-3]):[0-5][0-9]\b"
-# Exclude these from being a name - will be caught because same y value as name
-EXCLUDE_NAMES = [":", "●●●"]
+# Exclude these from being a name - can appear near the name
+EXCLUDE_NAMES = [
+    r":",
+    r"●●●",
+    r"All \(\d+\+?\)" # appears above name on profiles that already liked you
+]
 
 
 @dataclass
@@ -42,6 +46,14 @@ def get_bounding_box_ys(vertices: List) -> Tuple[int]:
     """Returns the min and max y coordinates of a bounding box"""
     ys = [vertex.y for vertex in vertices]
     return min(ys), max(ys)
+
+
+def check_string_for_exclude(name_str: str, exclude_list: List[str]) -> bool:
+    """returns True if name_str does not contain any of the regexes in exclude_list"""
+    for regex in exclude_list:
+        if re.search(regex, name_str):
+            return False
+    return True
 
 
 class OCR:
@@ -146,7 +158,7 @@ class OCR:
             block_min_y, block_max_y = get_bounding_box_ys(block.bounding_box.vertices)
             # exclude mistaken OCR that has same y as name
             if (
-                block_text not in name_exclude_list
+                check_string_for_exclude(block_text, name_exclude_list)
                 and block_min_y > header_bottom_y
                 and block_min_y < next_greatest_y
             ):

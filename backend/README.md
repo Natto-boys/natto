@@ -27,6 +27,11 @@ ngrok http 8080
 ```
 Use Postman or another tool to connect to e.g. `localhost:8080`, and send jsons by websocket.
 
+### Tests
+```
+pytest tests/...
+```
+
 ### Run Docker locally
 
 Pull docker image:

@@ -1,7 +1,7 @@
 import re
 import pytest
 
-from backend.OCR import TIME_REGEX
+from backend.OCR import TIME_REGEX, EXCLUDE_NAMES, check_string_for_exclude
 
 # Define a list of tuples for valid time strings and expected results
 VALID_TIME_STRINGS = [
@@ -40,3 +40,22 @@ def test_time_regex(time_string, expected_result):
         assert match is not None
     else:
         assert match is None
+
+
+# pytest unit test for check_string_for_exclude
+NAME_STRING_TUPLES = [
+    ("Shanti", True),
+    ("owen", True),
+    (":", False),
+    (": ", False),
+    ("●●●", False),
+    (" ●●●", False),
+    ("All (1)", False),
+    ("All (50+)", False),
+    ("All", True),
+]
+
+
+@pytest.mark.parametrize("name_string, expected_result", NAME_STRING_TUPLES)
+def test_check_string_for_exclude(name_string, expected_result):
+    assert check_string_for_exclude(name_string, EXCLUDE_NAMES) == expected_result
