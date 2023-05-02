@@ -19,8 +19,6 @@ def label_rows(df):
     df["label"] = ""
     for name, prompt in df[["name", "prompt"]].drop_duplicates().values:
         df_subset = df[(df["name"] == name) & (df["prompt"] == prompt)]
-        df_subset = df_subset.sample(frac=1)  # shuffle
-        # display each row of the subset, with a box to label it
         st.write(f"## {name}")
         st.write(f"**{prompt}**")
         for i, row in df_subset.iterrows():
@@ -36,10 +34,12 @@ if __name__ == "__main__":
     sheet_name = args.sheet
     sh = gc.open_by_key(SPREADSHEET_ID)
     prompt_df = get_sheet_as_df(sh, sheet_name)
+    prompt_df = prompt_df.sample(frac=1)  # shuffle
     with st.form(key="my_form"):
         label_df = label_rows(prompt_df)
         # TODO: save DF on every click not at end
         submit_button = st.form_submit_button(label="Submit")
         if submit_button:
             save_df_to_sheet(sh, label_df, sheet_name)
-            st.write("labels saved to google sheets")
+            # display popup saying saved
+            st.warning("Labels saved to Google Sheets!")
