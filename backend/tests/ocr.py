@@ -11,8 +11,9 @@ IMAGES = [
     ("judith.jpeg", "Judith", "I won't shut up about", "The film Aftersun - I saw X the cinema a few weeks ago and it floored H"), # has typos in response
     ("S.png", "S", "Best travel story", "missed my flight to mykonos from grabbing a breakfast burrito"),
     ("maxine.jpeg", "Maxine", "Dating me is like", "cracking your back X"), # has typo in response
-    # Unable to get the name for bottom 2, gets "All (50+)" instead as it's next text after phone header
-    # ("rachael.jpeg", "Rachael", "All I ask is that you", "Are a sillybilly and also like a northern accent 🖖🏾"),
+    ("karoline.jpeg", "Karoline", "I go crazy for", "Pasta & Campari"),
+    ("rachael.jpeg", "Rachael", "All I ask is that you", "Are a sillybilly and also like a northern accent"), # missing  🖖🏾 at end
+    # Won't get prompt from this as their like appears above profile
     # ("rachael2.jpeg", "Rachael", "My best Dad joke", "What do you call a Russian with 3 testicles? ........Hudyanick Abolockov!!!!!!!!!!"),
 ]
 
