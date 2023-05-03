@@ -5,3 +5,4 @@ pydub==0.25.1
 ffmpeg==1.4
 backoff==2.2.1
 google-cloud-vision==3.4.1
+pytest

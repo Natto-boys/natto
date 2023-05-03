@@ -5,7 +5,7 @@ import aiohttp
 import backoff
 from decouple import config
 
-from prompt import get_chat_messages, create_input_str
+from backend.prompt import get_chat_messages, create_input_str
 
 OPENAI_MODEL: str = "gpt-3.5-turbo"
 MAX_TOKENS: int = 100
